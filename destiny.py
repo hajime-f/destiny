@@ -6,6 +6,24 @@ from datetime import timedelta as td
 class Destiny:
 
     k = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸',]
+    j = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥',]
+    tsuhen = ['比肩', '劫財', '食神', '傷官', '偏財', '正財', '偏官', '正官', '偏印', '印綬', ]
+    gogyo = ['木', '火', '土', '金', '水',]
+    gogyo1 = ['木', '木', '火', '火', '土', '土', '金', '金', '水', '水',]
+    gogyo2 = ['水', '土', '木', '木', '土', '火', '火', '土', '金', '金', '土', '水',]
+
+    k_tsuhen = [
+        ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸',],
+        ['乙', '甲', '丁', '丙', '己', '戊', '辛', '庚', '癸', '壬',],
+        ['丙', '丁', '戊', '己', '庚', '辛', '壬', '癸', '甲', '乙',],
+        ['丁', '丙', '己', '戊', '辛', '庚', '癸', '壬', '乙', '甲',],
+        ['戊', '己', '庚', '辛', '壬', '癸', '甲', '乙', '丙', '丁',],
+        ['己', '戊', '辛', '庚', '癸', '壬', '乙', '甲', '丁', '丙',],
+        ['庚', '辛', '壬', '癸', '甲', '乙', '丙', '丁', '戊', '己',],
+        ['辛', '庚', '癸', '壬', '乙', '甲', '丁', '丙', '己', '戊',],
+        ['壬', '癸', '甲', '乙', '丙', '丁', '戊', '己', '庚', '辛',],
+        ['癸', '壬', '乙', '甲', '丁', '丙', '己', '戊', '辛', '庚',],
+    ]
     
     sixty_kanshi = [
         ['甲', '子',],
@@ -458,6 +476,9 @@ class Destiny:
 
     def get_k_number(self, jk):
         return self.k.index(jk)
+
+    def get_j_number(self, js):
+        return self.j.index(js)
     
     def get_month_kanshi(self, jk, month):
         k_number = self.get_k_number(jk)
@@ -486,11 +507,64 @@ class Destiny:
 
         return ['Non', 'Non']
 
+    def is_inyo(self, jk):
+        return False if self.get_k_number(jk) == 0 else True
+
+    def get_tsuhen_list(self, nk):
+        rt = []
+        k_number = self.get_k_number(nk)
+        for i in [((n - 1) % 10) for n in range(k_number, k_number + 10)]:
+            rt.append(self.k_tsuhen[k_number][i - k_number + 1])
+            
+        return rt
+
+    def get_gogyo1(self, gg1):
+        k_number = self.get_k_number(gg1)
+        return self.gogyo1[k_number]
+
+    def get_gogyo2(self, gg2):
+        j_number = self.get_j_number(gg2)
+        return self.gogyo2[j_number]
+
+    def get_gg(self, yk, mk, dk, tk):
+
+        g1 = self.get_gogyo1(yk[0])
+        g2 = self.get_gogyo1(mk[0])
+        g3 = self.get_gogyo1(dk[0])
+        g4 = self.get_gogyo1(tk[0])
+
+        g5 = self.get_gogyo2(yk[1])
+        g6 = self.get_gogyo2(mk[1])
+        g7 = self.get_gogyo2(dk[1])
+        g8 = self.get_gogyo2(tk[1])
+
+        gg = [g1, g2, g3, g4, g5, g6, g7, g8]
+        return gg
+
+    def get_tsuhen(self, yk, mk, dk, tk):
+
+        th_list = self.get_tsuhen_list(dk[0])
+        t1 = self.tsuhen[th_list.index(yk[0])]
+        t2 = self.tsuhen[th_list.index(mk[0])]
+        t3 = self.tsuhen[th_list.index(dk[0])]
+        t4 = self.tsuhen[th_list.index(tk[0])]
+        return [t1, t2, t3, t4]
+        
+
+    def get_haibun(self, yk, mk, dk, tk):
+
+        gg = self.get_gg(yk, mk, dk, tk)
+        n = [0] * len(self.gogyo)
+        for g in gg:
+            n[self.gogyo.index(g)] += 1
+        return n
+    
+
 if __name__ == '__main__':
 
     year = 1978
-    month = 7
-    day = 18
+    month = 9
+    day = 26
     time1 = 13
     time2 = 51
 
@@ -501,9 +575,15 @@ if __name__ == '__main__':
     month_kanshi = dest.get_month_kanshi(year_kanshi[0], month)
     day_kanshi = dest.get_day_kanshi(year, month, day)
     time_kanshi = dest.get_time_kanshi(day_kanshi[0], birthday)
+    haibun = dest.get_haibun(year_kanshi, month_kanshi, day_kanshi, time_kanshi)
+    tsuhen = dest.get_tsuhen(year_kanshi, month_kanshi, day_kanshi, time_kanshi)
     
     print('年干：', year_kanshi)
     print('月干：', month_kanshi)
     print('日干：', day_kanshi)
     print('時干：', time_kanshi)
-    
+    print('蔵干：', )
+    print('')
+
+    print('通変：', tsuhen)
+    print('五行配分：', haibun)
