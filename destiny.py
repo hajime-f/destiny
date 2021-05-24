@@ -565,11 +565,11 @@ if __name__ == '__main__':
     year = 1978
     month = 9
     day = 26
-    time1 = 13
-    time2 = 51
+    hour = 13
+    minute = 51
 
     dest = Destiny()
-    birthday = dt(year=year, month=month, day=day, hour=time1, minute=time2)
+    birthday = dt(year=year, month=month, day=day, hour=hour, minute=minute)
     
     year_kanshi = dest.get_year_kanshi(year)
     month_kanshi = dest.get_month_kanshi(year_kanshi[0], month)

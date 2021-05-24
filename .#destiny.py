@@ -1,5 +1,0 @@
-XSym
-0027
-37c9014e06bca7b83b9801aa8178df94
-hajime-f@borneo.local.70605
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
