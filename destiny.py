@@ -151,11 +151,11 @@ def lookup_tsuhen(day_kanshi, kan_):
         
 if __name__ == '__main__':
 
-    year = 1955
-    month = 4
-    day = 13
-    hour = 18
-    minute = 0
+    year = 1978
+    month = 9
+    day = 26
+    hour = 13
+    minute = 51
 
     # 生まれの年月日時分の datetime を生成する
     birthday = dt(year = year, month = month, day = day, hour = hour, minute = minute)
