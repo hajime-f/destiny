@@ -166,9 +166,63 @@ def calc_ritsuun_year(d_time):
     previous_ritsuun_year = round((diff_previous.days + (diff_previous.seconds / 60 / 60 / 24)) / 3)
     next_ritsuun_year = round((diff_next.days + (diff_next.seconds / 60 / 60 / 24)) / 3)
 
-    return previous_ritsuun_year, next_ritsuun_year
-    
+    return [previous_ritsuun_year, next_ritsuun_year]
 
+
+def is_inyo(kan_):
+    
+    # 十干の陰陽を判定する（1なら陽、0なら陰）
+    try:
+        if kd.kan.index(kan_) % 2:
+            return 0
+        else:
+            return 1
+    except:
+        print('十干の陰陽を判定できませんでした。')
+        exit()
+
+
+def is_junun_gyakuun(year_kan, sex):
+
+    # 大運の順と逆を判定する
+    if ((is_inyo(year_kan) == 1) and (sex == 0)) or ((is_inyo(year_kan) == 0) and (sex == 1)):
+       return 1   # 年柱干が陽干の男命 or 年柱干が陰干の女命は、順運
+   
+    elif ((is_inyo(year_kan) == 0) and (sex == 0)) or ((is_inyo(year_kan) == 1) and (sex == 1)):
+       return 0   # 年柱干が陽干の女命 or 年柱干が陰干の男命は、逆運
+   
+    else:
+        print('大運の順逆を判定できませんでした。')
+        exit()
+
+def calc_ritsuun(month_kanshi, day_kan, ritsuun_year, jun_gyaku_flag):
+
+    # 立運計算
+    if jun_gyaku_flag == 1:
+        ry_ = ritsuun_year[1] + 1  # 次の節入日が立運の起算日
+        p = 1   # 六十干支表を順にたどる
+    else:
+        ry_ = ritsuun_year[0] + 1 # 前の節入日が立運の起算日
+        p = -1  # 六十干支表を逆にたどる
+                
+    for idx, sk in enumerate(kd.sixty_kanshi):
+        if month_kanshi == sk:
+            break
+
+    daiun_kanshi = []
+    for n in list(range(10, 120, 10)):
+        kanshi_ = kd.sixty_kanshi[idx]
+        tsuhen_ = lookup_tsuhen(day_kan, kanshi_[0])
+        daiun_kanshi.append([ry_, ''.join(kanshi_) + ' (' + tsuhen_ + ')'])
+        ry_ += 10
+        idx += p
+        if idx >= 60:
+            idx = 0
+
+    return daiun_kanshi
+    
+    
+        
 if __name__ == '__main__':
 
     year = 1978
@@ -176,7 +230,7 @@ if __name__ == '__main__':
     day = 26
     hour = 13
     minute = 51
-    sex = 0  # 0->男, 1->女
+    sex = 1  # 0->男, 1->女
 
     # 生まれの年月日時分の datetime を生成する
     birthday = dt(year = year, month = month, day = day, hour = hour, minute = minute)
@@ -208,8 +262,10 @@ if __name__ == '__main__':
     tsuhen_ = [year_tsuhen_tenkan, month_tsuhen_tenkan, day_tsuhen_tenkan, time_tsuhen_tenkan,
                year_tsuhen_zokan, month_tsuhen_zokan, day_tsuhen_zokan, time_tsuhen_zokan,]
 
-    # 立運年数を計算する
-    previous_ritsuun_year, next_ritsuun_year = calc_ritsuun_year(birthday)
+    # 大運干支を得る
+    ritsuun_year = calc_ritsuun_year(birthday)
+    jun_gyaku_flag = is_junun_gyakuun(year_kanshi[0], sex)
+    daiun_kanshi = calc_ritsuun(month_kanshi, day_kanshi[0], ritsuun_year, jun_gyaku_flag)
     
     print(year_kanshi)
     print(month_kanshi)
@@ -220,3 +276,5 @@ if __name__ == '__main__':
     print(haibun)
 
     print(tsuhen_)
+
+    print(daiun_kanshi)
