@@ -1,5 +1,5 @@
 all:
-	poetry run python destiny2.py
+	poetry run python destiny.py
 
 install:
 	poetry install
