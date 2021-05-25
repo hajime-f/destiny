@@ -143,12 +143,32 @@ def obtain_zokan(d_time, shi_):
 
 def lookup_tsuhen(day_kanshi, kan_):
 
+    # 通変表から通変を引く
     kan_idx1 = kd.kan.index(day_kanshi)
     kan_idx2 = kd.kan_tsuhen[kan_idx1].index(kan_)
     
     return kd.tsuhen[kan_idx2]
 
-        
+
+def calc_ritsuun_year(d_time):
+
+    # 立運年数を計算する
+    for s in kd.setsuiri:
+        p = is_setsuiri_month(dt(year = d_time.year, month = d_time.month, day = d_time.day))
+        if (s[0] == d_time.year) and (s[1] == d_time.month):
+            previous_setsuiri =  dt(year = s[0], month = s[1] + p, day = s[2], hour = s[3], minute = s[4])
+            next_setsuiri = dt(year = s[0], month = s[1] + p + 1, day = s[2], hour = s[3], minute = s[4])
+            break
+
+    diff_previous = d_time - previous_setsuiri
+    diff_next = next_setsuiri - d_time
+
+    previous_ritsuun_year = round((diff_previous.days + (diff_previous.seconds / 60 / 60 / 24)) / 3)
+    next_ritsuun_year = round((diff_next.days + (diff_next.seconds / 60 / 60 / 24)) / 3)
+
+    return previous_ritsuun_year, next_ritsuun_year
+    
+
 if __name__ == '__main__':
 
     year = 1978
@@ -156,6 +176,7 @@ if __name__ == '__main__':
     day = 26
     hour = 13
     minute = 51
+    sex = 0  # 0->男, 1->女
 
     # 生まれの年月日時分の datetime を生成する
     birthday = dt(year = year, month = month, day = day, hour = hour, minute = minute)
@@ -186,7 +207,10 @@ if __name__ == '__main__':
     time_tsuhen_zokan = lookup_tsuhen(day_kanshi[0], time_zokan[0])
     tsuhen_ = [year_tsuhen_tenkan, month_tsuhen_tenkan, day_tsuhen_tenkan, time_tsuhen_tenkan,
                year_tsuhen_zokan, month_tsuhen_zokan, day_tsuhen_zokan, time_tsuhen_zokan,]
-               
+
+    # 立運年数を計算する
+    previous_ritsuun_year, next_ritsuun_year = calc_ritsuun_year(birthday)
+    
     print(year_kanshi)
     print(month_kanshi)
     print(day_kanshi)
