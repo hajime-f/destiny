@@ -67,9 +67,12 @@ def obtain_day_kanshi(d_time):
         exit()        
 
 
-def obtain_time_kanshi(d_time, day_kanshi):
-
+def obtain_time_kanshi(d_time, day_kanshi, none_flag):
+    
     # 時干支を得る
+    if none_flag:
+        return ['--', '--']
+    
     time_span = [0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 24]
     
     for i in range(len(time_span) - 1):
@@ -92,24 +95,33 @@ def obtain_time_kanshi(d_time, day_kanshi):
     exit()        
 
 
-def calc_gogyo_haibun(year_kanshi, month_kanshi, day_kanshi, time_kanshi):
+def calc_gogyo_haibun(year_kanshi, month_kanshi, day_kanshi, time_kanshi, none_flag):
 
     # 五行の配分を計算する
     g1 = kd.gogyo_kan[kd.kan.index(year_kanshi[0])]
     g2 = kd.gogyo_kan[kd.kan.index(month_kanshi[0])]
     g3 = kd.gogyo_kan[kd.kan.index(day_kanshi[0])]
-    g4 = kd.gogyo_kan[kd.kan.index(time_kanshi[0])]
+    if none_flag:
+        g4 = '--'
+    else:
+        g4 = kd.gogyo_kan[kd.kan.index(time_kanshi[0])]
 
     g5 = kd.gogyo_shi[kd.shi.index(year_kanshi[1])]
     g6 = kd.gogyo_shi[kd.shi.index(month_kanshi[1])]
     g7 = kd.gogyo_shi[kd.shi.index(day_kanshi[1])]
-    g8 = kd.gogyo_shi[kd.shi.index(time_kanshi[1])]
+    if none_flag:
+        g8 = '--'
+    else:
+        g8 = kd.gogyo_shi[kd.shi.index(time_kanshi[1])]
 
     gg = [g1, g2, g3, g4, g5, g6, g7, g8]
-
+    
     n = [0] * len(kd.gogyo)
     for g in gg:
-        n[kd.gogyo.index(g)] += 1
+        if g == '--':
+            continue
+        else:
+            n[kd.gogyo.index(g)] += 1
     return n
 
 
@@ -253,49 +265,69 @@ def calc_getsurei(d_time, kan_):
 if __name__ == '__main__':
 
     year = 1978
-    month = 7
-    day = 18
-    hour = 14
-    minute = 47
-    sex = 1  # 0->男, 1->女
+    month = 9
+    day = 26
+    hour = 13
+    minute = 51
+    sex = 0  # 0->男, 1->女
 
     # 生まれの年月日時分の datetime を生成する
-    birthday = dt(year = year, month = month, day = day, hour = hour, minute = minute)
+    if (hour is None) or (minute is None):
+        birthday = dt(year = year, month = month, day = day)
+        none_flag = True
+    else:
+        birthday = dt(year = year, month = month, day = day, hour = hour, minute = minute)
+        none_flag = False
 
     # 天干・地支を得る
     year_kanshi = obtain_year_kanshi(birthday)
     month_kanshi = obtain_month_kanshi(birthday, year_kanshi[0])
     day_kanshi = obtain_day_kanshi(birthday)
-    time_kanshi = obtain_time_kanshi(birthday, day_kanshi[0])
+    time_kanshi = obtain_time_kanshi(birthday, day_kanshi[0], none_flag)
 
     # 五行の配分を計算する
-    haibun = calc_gogyo_haibun(year_kanshi, month_kanshi, day_kanshi, time_kanshi)
+    haibun = calc_gogyo_haibun(year_kanshi, month_kanshi, day_kanshi, time_kanshi, none_flag)
     
     # 蔵干を得る
     year_zokan = obtain_zokan(birthday, year_kanshi[1])
     month_zokan = obtain_zokan(birthday, month_kanshi[1])
     day_zokan = obtain_zokan(birthday, day_kanshi[1])
-    time_zokan = obtain_zokan(birthday, time_kanshi[1])
+    if none_flag:
+        time_zokan = ['--', '--']
+    else:
+        time_zokan = obtain_zokan(birthday, time_kanshi[1])
 
     # 通変を得る
     year_tsuhen_tenkan = lookup_tsuhen(day_kanshi[0], year_kanshi[0])
     month_tsuhen_tenkan = lookup_tsuhen(day_kanshi[0], month_kanshi[0])
     day_tsuhen_tenkan = lookup_tsuhen(day_kanshi[0], day_kanshi[0])
-    time_tsuhen_tenkan = lookup_tsuhen(day_kanshi[0], time_kanshi[0])
+    if none_flag:
+        time_tsuhen_tenkan = '--'
+    else:
+        time_tsuhen_tenkan = lookup_tsuhen(day_kanshi[0], time_kanshi[0])
     year_tsuhen_zokan = lookup_tsuhen(day_kanshi[0], year_zokan[0])
     month_tsuhen_zokan = lookup_tsuhen(day_kanshi[0], month_zokan[0])
     day_tsuhen_zokan = lookup_tsuhen(day_kanshi[0], day_zokan[0])
-    time_tsuhen_zokan = lookup_tsuhen(day_kanshi[0], time_zokan[0])
+    if none_flag:
+        time_tsuhen_zokan = '--'
+    else:
+        time_tsuhen_zokan = lookup_tsuhen(day_kanshi[0], time_zokan[0])
 
     # 十二運を得る
     year_twelve_day = lookup_twelve_fortune(day_kanshi[0], year_kanshi[1])
     month_twelve_day = lookup_twelve_fortune(day_kanshi[0], month_kanshi[1])
     day_twelve_day = lookup_twelve_fortune(day_kanshi[0], day_kanshi[1])
-    time_twelve_day = lookup_twelve_fortune(day_kanshi[0], time_kanshi[1])
+    if none_flag:
+        time_twelve_day = '--'
+    else:
+        time_twelve_day = lookup_twelve_fortune(day_kanshi[0], time_kanshi[1])
     year_twelve_zokan = lookup_twelve_fortune(month_zokan[0], year_kanshi[1])
     month_twelve_zokan = lookup_twelve_fortune(month_zokan[0], month_kanshi[1])
     day_twelve_zokan = lookup_twelve_fortune(month_zokan[0], day_kanshi[1])
-    time_twelve_zokan = lookup_twelve_fortune(month_zokan[0], time_kanshi[1])
+    if none_flag:
+        time_twelve_zokan = '--'
+    else:
+        time_twelve_zokan = lookup_twelve_fortune(day_kanshi[0], time_kanshi[1])
 
     # 大運干支を得る
     ritsuun_year = calc_ritsuun_year(birthday)
