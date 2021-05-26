@@ -220,17 +220,44 @@ def calc_ritsuun(month_kanshi, day_kan, ritsuun_year, jun_gyaku_flag):
             idx = 0
 
     return daiun_kanshi
+
+
+def lookup_twelve_fortune(kan_, shi_):
+
+    # 十二運表から十二運を引く
+    tw_idx1 = kd.kan.index(kan_)
+    tw_idx2 = kd.twelve_table[tw_idx1].index(shi_)
     
+    return kd.twelve_fortune[tw_idx2]
+
+
+def calc_getsurei(d_time, kan_):
+
+    shi_ = kd.shi[d_time.month]  # 生まれ月の地支を引く（節入りを考慮している？？？）
     
+    gr_idx1 = kd.kan.index(kan_)
+    getsurei_ = kd.getsurei_table[gr_idx1]
+
+    p = False
+    for idx1, gr_ in enumerate(getsurei_):
+        for idx2, g in enumerate(gr_):
+            if shi_ in g:
+                p = True
+                break
+        if p:
+            break
+
+    return kd.getsurei[idx1], g
+
         
 if __name__ == '__main__':
 
     year = 1978
-    month = 9
-    day = 26
-    hour = 13
-    minute = 51
-    sex = 0  # 0->男, 1->女
+    month = 7
+    day = 18
+    hour = 14
+    minute = 47
+    sex = 1  # 0->男, 1->女
 
     # 生まれの年月日時分の datetime を生成する
     birthday = dt(year = year, month = month, day = day, hour = hour, minute = minute)
@@ -259,13 +286,25 @@ if __name__ == '__main__':
     month_tsuhen_zokan = lookup_tsuhen(day_kanshi[0], month_zokan[0])
     day_tsuhen_zokan = lookup_tsuhen(day_kanshi[0], day_zokan[0])
     time_tsuhen_zokan = lookup_tsuhen(day_kanshi[0], time_zokan[0])
-    tsuhen = [year_tsuhen_tenkan, month_tsuhen_tenkan, day_tsuhen_tenkan, time_tsuhen_tenkan,
-              year_tsuhen_zokan, month_tsuhen_zokan, day_tsuhen_zokan, time_tsuhen_zokan,]
+
+    # 十二運を得る
+    year_twelve_day = lookup_twelve_fortune(day_kanshi[0], year_kanshi[1])
+    month_twelve_day = lookup_twelve_fortune(day_kanshi[0], month_kanshi[1])
+    day_twelve_day = lookup_twelve_fortune(day_kanshi[0], day_kanshi[1])
+    time_twelve_day = lookup_twelve_fortune(day_kanshi[0], time_kanshi[1])
+    year_twelve_zokan = lookup_twelve_fortune(month_zokan[0], year_kanshi[1])
+    month_twelve_zokan = lookup_twelve_fortune(month_zokan[0], month_kanshi[1])
+    day_twelve_zokan = lookup_twelve_fortune(month_zokan[0], day_kanshi[1])
+    time_twelve_zokan = lookup_twelve_fortune(month_zokan[0], time_kanshi[1])
 
     # 大運干支を得る
     ritsuun_year = calc_ritsuun_year(birthday)
     jun_gyaku_flag = is_junun_gyakuun(year_kanshi[0], sex)
     daiun_kanshi = calc_ritsuun(month_kanshi, day_kanshi[0], ritsuun_year, jun_gyaku_flag)
+
+    # 月令を計算する
+    getsurei_day, umare_day = calc_getsurei(birthday, day_kanshi[0])
+    getsurei_zokan, umare_zokan = calc_getsurei(birthday, month_zokan[0])
 
     print('+---------------------------------------------------+')
     print('|   時 柱    |   日 柱    |   月 柱    |   年 柱    |')
@@ -281,6 +320,12 @@ if __name__ == '__main__':
           day_kanshi[1]   + '     |     ' +
           month_kanshi[1] + '     |    ' +
           year_kanshi[1]  + '      |    ')
+    print('|  ' +
+          time_twelve_zokan + ' , ' + time_twelve_day + '   |  ' +
+          day_twelve_zokan + ' , ' + day_twelve_day + '   |  ' +
+          month_twelve_zokan + ' , ' + month_twelve_day + '   |  ' +
+          year_twelve_zokan + ' , ' + year_twelve_day + '   | '
+          )
     print('+---------------------------------------------------+')
     print('| ' + 
           time_zokan[0] + ' （' + time_tsuhen_zokan + '）' + '| ' +
@@ -288,13 +333,19 @@ if __name__ == '__main__':
           month_zokan[0] + ' （' + month_tsuhen_zokan + '）' + '| ' +
           year_zokan[0] + ' （' + year_tsuhen_zokan + '）' + '| ' )
     print('+---------------------------------------------------+')
+    
     print('')
+    
     print('木：' + str(haibun[0]))
     print('火：' + str(haibun[1]))
     print('土：' + str(haibun[2]))
     print('金：' + str(haibun[3]))
     print('水：' + str(haibun[4]))
-    print('')
     
+    print('')
+
+    print('生まれ：', umare_day)
+    print('旺衰（日柱）：', getsurei_day)
+    print('旺衰（月蔵）：', getsurei_zokan)
 
     print(daiun_kanshi)
