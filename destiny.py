@@ -207,6 +207,16 @@ def is_junun_gyakuun(year_kan, sex):
         print('大運の順逆を判定できませんでした。')
         exit()
 
+
+def lookup_twelve_fortune(kan_, shi_):
+
+    # 十二運表から十二運を引く
+    tw_idx1 = kd.kan.index(kan_)
+    tw_idx2 = kd.twelve_table[tw_idx1].index(shi_)
+    
+    return kd.twelve_fortune[tw_idx2]
+
+
 def calc_ritsuun(month_kanshi, day_kan, ritsuun_year, jun_gyaku_flag):
 
     # 立運計算
@@ -225,22 +235,14 @@ def calc_ritsuun(month_kanshi, day_kan, ritsuun_year, jun_gyaku_flag):
     for n in list(range(10, 120, 10)):
         kanshi_ = kd.sixty_kanshi[idx]
         tsuhen_ = lookup_tsuhen(day_kan, kanshi_[0])
-        daiun_kanshi.append([ry_, ''.join(kanshi_) + ' (' + tsuhen_ + ')'])
+        t_fortune_ = lookup_twelve_fortune(day_kan, kanshi_[1])
+        daiun_kanshi.append([ry_, ''.join(kanshi_) + ' (' + tsuhen_ + '・' + t_fortune_ + ')'])
         ry_ += 10
         idx += p
         if idx >= 60:
             idx = 0
 
     return daiun_kanshi
-
-
-def lookup_twelve_fortune(kan_, shi_):
-
-    # 十二運表から十二運を引く
-    tw_idx1 = kd.kan.index(kan_)
-    tw_idx2 = kd.twelve_table[tw_idx1].index(shi_)
-    
-    return kd.twelve_fortune[tw_idx2]
 
 
 def calc_getsurei(d_time, kan_):
