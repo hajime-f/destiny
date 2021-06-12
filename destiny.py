@@ -71,7 +71,7 @@ def obtain_time_kanshi(d_time, day_kanshi, none_flag):
     
     # 時干支を得る
     if none_flag:
-        return ['--', '--']
+        return ['---', '--']
     
     time_span = [0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 24]
     
@@ -311,7 +311,7 @@ if __name__ == '__main__':
     month_zokan = obtain_zokan(birthday, month_kanshi[1])
     day_zokan = obtain_zokan(birthday, day_kanshi[1])
     if none_flag:
-        time_zokan = ['--', '--']
+        time_zokan = ['---', '---']
     else:
         time_zokan = obtain_zokan(birthday, time_kanshi[1])
 
@@ -320,14 +320,14 @@ if __name__ == '__main__':
     month_tsuhen_tenkan = lookup_tsuhen(day_kanshi[0], month_kanshi[0])
     day_tsuhen_tenkan = lookup_tsuhen(day_kanshi[0], day_kanshi[0])
     if none_flag:
-        time_tsuhen_tenkan = '--'
+        time_tsuhen_tenkan = '---'
     else:
         time_tsuhen_tenkan = lookup_tsuhen(day_kanshi[0], time_kanshi[0])
     year_tsuhen_zokan = lookup_tsuhen(day_kanshi[0], year_zokan[0])
     month_tsuhen_zokan = lookup_tsuhen(day_kanshi[0], month_zokan[0])
     day_tsuhen_zokan = lookup_tsuhen(day_kanshi[0], day_zokan[0])
     if none_flag:
-        time_tsuhen_zokan = '--'
+        time_tsuhen_zokan = '---'
     else:
         time_tsuhen_zokan = lookup_tsuhen(day_kanshi[0], time_zokan[0])
 
@@ -409,7 +409,7 @@ if __name__ == '__main__':
     
     print('')
 
-    print('旺衰（日柱）：', getsurei_day)
+    print('旺衰：', getsurei_day)
 
     print(daiun_kanshi)
 
