@@ -1690,3 +1690,39 @@ getsurei_table = [
     [['亥（11月・冬）', '子（12月・冬）', '丑（1月・冬土用）',], ['申（8月・秋）', '酉（9月・秋）', '戌（夏土用）',], ['寅（2月・春）', '卯（3月・春）', '辰（4月・春土用）',], ['巳（5月・夏）', '午（6月・夏）', '未（7月・夏土用）',], [],], # 壬
     [['亥（11月・冬）', '子（12月・冬）', '丑（1月・冬土用）',], ['申（8月・秋）', '酉（9月・秋）', '戌（夏土用）',], ['寅（2月・春）', '卯（3月・春）', '辰（4月・春土用）',], ['巳（5月・夏）', '午（6月・夏）', '未（7月・夏土用）',], [],], # 癸    
 ]
+
+from datetime import datetime
+
+WAREKI_START = {
+   '令和': datetime(2019, 5, 1),
+   '平成': datetime(1989, 1, 8),
+   '昭和': datetime(1926, 12, 25)
+}
+
+def convert_to_wareki(y_m_d):
+    """西暦の年月日を和暦の年に変換する."""
+    try:
+        if WAREKI_START['令和'] <= y_m_d:
+            reiwa_year = WAREKI_START['令和'].year
+            era_year = y_m_d.year
+            year = (era_year - reiwa_year) + 1
+            era_str = '令和'
+        elif WAREKI_START['平成'] <= y_m_d:
+            reiwa_year = WAREKI_START['平成'].year
+            era_year = y_m_d.year
+            year = (era_year - reiwa_year) + 1
+            era_str = '平成'
+        elif WAREKI_START['昭和'] <= y_m_d:
+            reiwa_year = WAREKI_START['昭和'].year
+            era_year = y_m_d.year
+            year = (era_year - reiwa_year) + 1
+            era_str = '昭和'
+        else:
+            return '昭和以前'
+
+        if year == 1:
+            year = '元'
+       
+        return era_str + str(year) + '年'
+    except ValueError as e:
+        raise e

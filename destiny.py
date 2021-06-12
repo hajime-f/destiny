@@ -221,10 +221,10 @@ def calc_ritsuun(month_kanshi, day_kan, ritsuun_year, jun_gyaku_flag):
 
     # 立運計算
     if jun_gyaku_flag == 1:
-        ry_ = ritsuun_year[1] + 1  # 次の節入日が立運の起算日
+        ry_ = ritsuun_year[1]  # 次の節入日が立運の起算日
         p = 1   # 六十干支表を順にたどる
     else:
-        ry_ = ritsuun_year[0] + 1 # 前の節入日が立運の起算日
+        ry_ = ritsuun_year[0] # 前の節入日が立運の起算日
         p = -1  # 六十干支表を逆にたどる
                 
     for idx, sk in enumerate(kd.sixty_kanshi):
@@ -243,6 +243,22 @@ def calc_ritsuun(month_kanshi, day_kan, ritsuun_year, jun_gyaku_flag):
             idx = 0
 
     return daiun_kanshi
+
+
+def calc_nenun(d_time, kan_):
+
+    idx = (d_time.year - 3) % 60 - 1
+    nenun = []
+    for n in list(range(0, 120)):
+        k = kd.sixty_kanshi[idx]
+        tsuhen_ = lookup_tsuhen(kan_, k[0])
+        t_fortune_ = lookup_twelve_fortune(kan_, k[1])
+        nenun.append([n, ''.join(k) + ' (' + tsuhen_ + '・' + t_fortune_ + ')'])
+        idx += 1
+        if idx >= 60:
+            idx = 0
+
+    return nenun
 
 
 def calc_getsurei(d_time, kan_):
@@ -336,9 +352,24 @@ if __name__ == '__main__':
     jun_gyaku_flag = is_junun_gyakuun(year_kanshi[0], sex)
     daiun_kanshi = calc_ritsuun(month_kanshi, day_kanshi[0], ritsuun_year, jun_gyaku_flag)
 
+    # 年干支を得る
+    nenun = calc_nenun(birthday, day_kanshi[0])
+
     # 月令を計算する
     getsurei_day, umare_day = calc_getsurei(birthday, day_kanshi[0])
     getsurei_zokan, umare_zokan = calc_getsurei(birthday, month_zokan[0])
+
+    # 和暦を得る
+    wareki = kd.convert_to_wareki(birthday)
+
+    # 性別を得る
+    if sex == 0:
+        sex_str = '男命'
+    else:
+        sex_str = '女命'
+
+    print('')
+    print(str(year) + '年（' + wareki + '）' + str(month) + '月' + str(day) + '日 ' + str(hour) + '時' + str(minute) + '分 ' + sex_str)
 
     print('+---------------------------------------------------+')
     print('|   時 柱    |   日 柱    |   月 柱    |   年 柱    |')
@@ -383,3 +414,5 @@ if __name__ == '__main__':
     print('旺衰（月蔵）：', getsurei_zokan)
 
     print(daiun_kanshi)
+
+    print(nenun)
