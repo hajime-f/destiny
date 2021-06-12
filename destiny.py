@@ -247,7 +247,7 @@ def calc_ritsuun(month_kanshi, day_kan, ritsuun_year, jun_gyaku_flag):
 
 def calc_nenun(d_time, kan_):
 
-    idx = (d_time.year - 3) % 60 - 1
+    idx = (d_time.year - 3) % 60 - 1 + is_setsuiri_year(d_time)
     nenun = []
     for n in list(range(0, 120)):
         k = kd.sixty_kanshi[idx]
@@ -370,8 +370,8 @@ if __name__ == '__main__':
 
     print('')
     print(str(year) + '年（' + wareki + '）' + str(month) + '月' + str(day) + '日 ' + str(hour) + '時' + str(minute) + '分 ' + sex_str)
+    print('')
 
-    print('+---------------------------------------------------+')
     print('|   時 柱    |   日 柱    |   月 柱    |   年 柱    |')
     print('+===================================================+')
     print('| ' + 
@@ -385,12 +385,6 @@ if __name__ == '__main__':
           day_kanshi[1]   + '     |     ' +
           month_kanshi[1] + '     |    ' +
           year_kanshi[1]  + '      |    ')
-    print('|  ' +
-          time_twelve_zokan + ' , ' + time_twelve_day + '   |  ' +
-          day_twelve_zokan + ' , ' + day_twelve_day + '   |  ' +
-          month_twelve_zokan + ' , ' + month_twelve_day + '   |  ' +
-          year_twelve_zokan + ' , ' + year_twelve_day + '   | '
-          )
     print('+---------------------------------------------------+')
     print('| ' + 
           time_zokan[0] + ' （' + time_tsuhen_zokan + '）' + '| ' +
@@ -398,6 +392,12 @@ if __name__ == '__main__':
           month_zokan[0] + ' （' + month_tsuhen_zokan + '）' + '| ' +
           year_zokan[0] + ' （' + year_tsuhen_zokan + '）' + '| ' )
     print('+---------------------------------------------------+')
+    print('|     ' +
+          time_twelve_day + '     |     ' +
+          day_twelve_day + '     |     ' +
+          month_twelve_day + '     |     ' +
+          year_twelve_day + '     |    '
+          )
     
     print('')
     
@@ -409,9 +409,7 @@ if __name__ == '__main__':
     
     print('')
 
-    print('生まれ：', umare_day)
     print('旺衰（日柱）：', getsurei_day)
-    print('旺衰（月蔵）：', getsurei_zokan)
 
     print(daiun_kanshi)
 
