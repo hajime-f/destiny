@@ -296,7 +296,6 @@ def is_kango(tenkan_zokan):
         for j in list(range(i, len(tenkan_zokan))):
             if kd.kango[tz_idx] == tenkan_zokan[j] and i != j:
                 kango_.append([[tz1, i], [tenkan_zokan[j], j], kd.kango_henka[tz_idx]])
-                break;
             
     return kango_
 
@@ -307,6 +306,7 @@ def disp_kango(kango):
         print('干合なし')
         return True
 
+    print('干合:')
     for k in kango:
         print(k[0][0] + '（' + kd.kango_chu[k[0][1]] + '）＋' + k[1][0] + '（' + kd.kango_chu[k[1][1]] + '）→ ' + k[2])
 
@@ -361,8 +361,12 @@ if __name__ == '__main__':
         none_flag = True
     else:
         birthday = dt(year = year, month = month, day = day, hour = hour, minute = minute)
+        # サマータイムを考慮する
+        if dt(year=1948, month=5, day=2) <= birthday < dt(year=1951, month=9, day=8):
+            birthday = dt(year=birthday.year, month=birthday.month, day=birthday.day,
+                          hour=birthday.hour - 1, minute=birthday.minute)
         none_flag = False
-
+        
     # 天干・地支を得る
     year_kanshi = obtain_year_kanshi(birthday)
     month_kanshi = obtain_month_kanshi(birthday, year_kanshi[0])
@@ -446,7 +450,7 @@ if __name__ == '__main__':
         sex_str = '女命'
 
     print('')
-    print(str(year) + '年（' + wareki + '）' + str(month) + '月' + str(day) + '日 ' + str(hour) + '時' + str(minute) + '分 ' + sex_str)
+    print(str(year) + '年（' + wareki + '）' + str(month) + '月' + str(day) + '日 ' + str(hour) + '時' + str(minute) + '分生 ' + sex_str)
     print('')
 
     print('|   時 柱    |   日 柱    |   月 柱    |   年 柱    |')
