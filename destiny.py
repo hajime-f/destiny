@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import csv
 import kanshi_data as kd
 from datetime import datetime as dt
 from datetime import timedelta as td
@@ -300,6 +299,30 @@ def is_kango(tenkan_zokan):
     return kango_
 
 
+def is_kakikaku(kango, month_shi):
+
+    henkaku = ''
+    p = -1
+    for k in kango:
+        if 1 in k[0] and 2 in k[1]:
+            henkaku = k[2]
+            p = 1
+            break
+        elif 2 in k[0] and 3 in k[1]:
+            henkaku = k[2]
+            p = 3
+            break
+        else:
+            pass
+
+    if henkaku == kd.gogyo_shi[kd.shi.index(month_shi)] and p != -1:
+        henkaku = kd.chu[p] + 'との干合により化気' + henkaku + '格となる'
+    else:
+        henkaku = '化気格なし'
+
+    return henkaku
+
+
 def disp_kango(kango):
 
     if not kango:
@@ -440,6 +463,10 @@ if __name__ == '__main__':
         kango = is_kango([year_kanshi[0], month_kanshi[0], day_kanshi[0], time_kanshi[0],
                           year_zokan[0], month_zokan[0], day_zokan[0], time_zokan[0]])
 
+    # 化気格を判定する
+    if kango:
+        kakikaku = is_kakikaku(kango, month_kanshi[1])
+
     # 和暦を得る
     wareki = kd.convert_to_wareki(birthday)
 
@@ -464,8 +491,8 @@ if __name__ == '__main__':
     print('|     ' + 
           time_kanshi[1]  + '     |     ' +
           day_kanshi[1]   + '     |     ' +
-          month_kanshi[1] + '     |    ' +
-          year_kanshi[1]  + '      |    ')
+          month_kanshi[1] + '     |     ' +
+          year_kanshi[1]  + '     |    ')
     print('+---------------------------------------------------+')
     print('| ' + 
           time_zokan[0] + ' （' + time_tsuhen_zokan + '）' + '| ' +
@@ -499,6 +526,11 @@ if __name__ == '__main__':
     print('')
 
     k = disp_kango(kango)
+
+    print('')
+
+    if kango:
+        print(kakikaku)
 
     print('')
 
