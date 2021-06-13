@@ -28,6 +28,13 @@ def obtain_year_kanshi(d_time):
         print('年干支の計算で例外が送出されました。')
         exit()
 
+
+def obtain_kubo(d_time):
+    
+    idx = (d_time.year - 3) % 60 - 1 + is_setsuiri_year(d_time)
+    
+    return kd.kubo[idx // 10]
+
         
 def is_setsuiri_month(d_time):
 
@@ -236,7 +243,7 @@ def calc_ritsuun(month_kanshi, day_kan, ritsuun_year, jun_gyaku_flag):
         kanshi_ = kd.sixty_kanshi[idx]
         tsuhen_ = lookup_tsuhen(day_kan, kanshi_[0])
         t_fortune_ = lookup_twelve_fortune(day_kan, kanshi_[1])
-        daiun_kanshi.append([ry_, ''.join(kanshi_) + ' (' + tsuhen_ + '・' + t_fortune_ + ')'])
+        daiun_kanshi.append([ry_, kanshi_[0], kanshi_[1], tsuhen_, t_fortune_])
         ry_ += 10
         idx += p
         if idx >= 60:
@@ -253,7 +260,8 @@ def calc_nenun(d_time, kan_):
         k = kd.sixty_kanshi[idx]
         tsuhen_ = lookup_tsuhen(kan_, k[0])
         t_fortune_ = lookup_twelve_fortune(kan_, k[1])
-        nenun.append([n, ''.join(k) + ' (' + tsuhen_ + '・' + t_fortune_ + ')'])
+        nenun.append([n, k[0], k[1], tsuhen_, t_fortune_])
+        # nenun.append([n, ''.join(k) + ' (' + tsuhen_ + '・' + t_fortune_ + ')'])
         idx += 1
         if idx >= 60:
             idx = 0
@@ -285,12 +293,24 @@ def is_kango(tenkan_zokan):
     kango_ = []
     for i, tz1 in enumerate(tenkan_zokan):
         tz_idx = kd.kan.index(tz1)
-        for j, tz2 in enumerate(tenkan_zokan):
-            if kd.kango[tz_idx] == tz2 and i != j:
-                kango_.append([[tz1, i], [tz2, j], kd.kango_henka[tz_idx]])
+        for j in list(range(i, len(tenkan_zokan))):
+            if kd.kango[tz_idx] == tenkan_zokan[j] and i != j:
+                kango_.append([[tz1, i], [tenkan_zokan[j], j], kd.kango_henka[tz_idx]])
                 break;
             
     return kango_
+
+
+def disp_kango(kango):
+
+    if not kango:
+        print('干合なし')
+        return True
+
+    for k in kango:
+        print(k[0][0] + '（' + kd.kango_chu[k[0][1]] + '）＋' + k[1][0] + '（' + kd.kango_chu[k[1][1]] + '）→ ' + k[2])
+
+    return True
 
 
 def disp_daiun_nenun(d_time, daiun, nenun):
@@ -303,29 +323,36 @@ def disp_daiun_nenun(d_time, daiun, nenun):
     print('------------------+-------+-----------------+------------------')
     
     for n, n_un_ in enumerate(nenun):
+        
+        u = ''.join([n_un_[1], n_un_[2]]) + ' (' + n_un_[3] + '・' + n_un_[4] + ')'
         wareki = kd.convert_to_wareki(dt(year=year, month=d_time.month, day=d_time.day))
+        
         if len(str(n)) == 1:
             age = '  ' + str(n)
         elif len(str(n)) == 2:
             age = ' ' + str(n)
         else:
             age = str(n)
+                    
         if n == daiun[m][0]:
-            print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' | '+ daiun[m][1] + ' | ' + n_un_[1])
+            d_un_ = ''.join([daiun[m][1], daiun[m][2]]) + ' (' + daiun[m][3] + '・' + daiun[m][4] + ')'
+            print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' | '+ d_un_ + ' | ' + u)
             print('------------------+-------+-----------------+------------------')
             m += 1
         else:
-            print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' |' + '                ' + ' | ' + n_un_[1])
+            print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' |' + '                ' + ' | ' + u)
         year += 1
+
+    return True
 
 
 if __name__ == '__main__':
 
-    year = 1940
-    month = 5
-    day = 10
-    hour = 12
-    minute = 0
+    year = 1978
+    month = 9
+    day = 26
+    hour = 13
+    minute = 51
     sex = 0  # 0->男, 1->女
 
     # 生まれの年月日時分の datetime を生成する
@@ -341,6 +368,9 @@ if __name__ == '__main__':
     month_kanshi = obtain_month_kanshi(birthday, year_kanshi[0])
     day_kanshi = obtain_day_kanshi(birthday)
     time_kanshi = obtain_time_kanshi(birthday, day_kanshi[0], none_flag)
+
+    # 空亡を得る
+    kubo = obtain_kubo(birthday)
 
     # 五行の配分を計算する
     haibun = calc_gogyo_haibun(year_kanshi, month_kanshi, day_kanshi, time_kanshi, none_flag)
@@ -447,6 +477,10 @@ if __name__ == '__main__':
           )
     
     print('')
+
+    print('空亡：' + kubo)
+    
+    print('')
     
     print('木：' + str(haibun[0]))
     print('火：' + str(haibun[1]))
@@ -460,9 +494,10 @@ if __name__ == '__main__':
 
     print('')
 
-    if kango:
-        print('干合：', kango)
-        
+    k = disp_kango(kango)
+
     print('')
 
-    disp_daiun_nenun(birthday, daiun_kanshi, nenun)
+    d = disp_daiun_nenun(birthday, daiun_kanshi, nenun)
+
+    
