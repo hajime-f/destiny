@@ -1720,9 +1720,17 @@ def convert_to_wareki(y_m_d):
         else:
             return '昭和以前'
 
-        if year == 1:
+        if len(str(year)) == 1:
+            year = ' ' + str(year)
+        else:
+            year = str(year)
+
+        if year == ' 1':
             year = '元'
-       
-        return era_str + str(year) + '年'
+
+        return era_str + year + '年'
     except ValueError as e:
         raise e
+
+kango = ["己", "庚", "辛", "壬", "癸", "甲", "乙", "丙", "丁", "戊",]
+kango_henka = ["土", "金", "水", "木", "火", "土", "金", "水", "木", "火",]

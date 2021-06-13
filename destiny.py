@@ -232,7 +232,7 @@ def calc_ritsuun(month_kanshi, day_kan, ritsuun_year, jun_gyaku_flag):
             break
 
     daiun_kanshi = []
-    for n in list(range(10, 120, 10)):
+    for n in list(range(10, 140, 10)):
         kanshi_ = kd.sixty_kanshi[idx]
         tsuhen_ = lookup_tsuhen(day_kan, kanshi_[0])
         t_fortune_ = lookup_twelve_fortune(day_kan, kanshi_[1])
@@ -279,14 +279,53 @@ def calc_getsurei(d_time, kan_):
 
     return kd.getsurei[idx1], g
 
-        
+
+def is_kango(tenkan_zokan):
+
+    kango_ = []
+    for i, tz1 in enumerate(tenkan_zokan):
+        tz_idx = kd.kan.index(tz1)
+        for j, tz2 in enumerate(tenkan_zokan):
+            if kd.kango[tz_idx] == tz2 and i != j:
+                kango_.append([[tz1, i], [tz2, j], kd.kango_henka[tz_idx]])
+                break;
+            
+    return kango_
+
+
+def disp_daiun_nenun(d_time, daiun, nenun):
+
+    year = d_time.year
+    m = 0
+    flag = False
+
+    print('        '+ '年' + '        | ' + '年齢' + '  |      ' + '大運' + '       |      ' + '年運')
+    print('------------------+-------+-----------------+------------------')
+    
+    for n, n_un_ in enumerate(nenun):
+        wareki = kd.convert_to_wareki(dt(year=year, month=d_time.month, day=d_time.day))
+        if len(str(n)) == 1:
+            age = '  ' + str(n)
+        elif len(str(n)) == 2:
+            age = ' ' + str(n)
+        else:
+            age = str(n)
+        if n == daiun[m][0]:
+            print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' | '+ daiun[m][1] + ' | ' + n_un_[1])
+            print('------------------+-------+-----------------+------------------')
+            m += 1
+        else:
+            print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' |' + '                ' + ' | ' + n_un_[1])
+        year += 1
+
+
 if __name__ == '__main__':
 
-    year = 1978
-    month = 9
-    day = 26
-    hour = 13
-    minute = 51
+    year = 1940
+    month = 5
+    day = 10
+    hour = 12
+    minute = 0
     sex = 0  # 0->男, 1->女
 
     # 生まれの年月日時分の datetime を生成する
@@ -359,6 +398,14 @@ if __name__ == '__main__':
     getsurei_day, umare_day = calc_getsurei(birthday, day_kanshi[0])
     getsurei_zokan, umare_zokan = calc_getsurei(birthday, month_zokan[0])
 
+    # 干合を判定する
+    if none_flag:
+        kango = is_kango([year_kanshi[0], month_kanshi[0], day_kanshi[0],
+                          year_zokan[0], month_zokan[0], day_zokan[0]])
+    else:
+        kango = is_kango([year_kanshi[0], month_kanshi[0], day_kanshi[0], time_kanshi[0],
+                          year_zokan[0], month_zokan[0], day_zokan[0], time_zokan[0]])
+
     # 和暦を得る
     wareki = kd.convert_to_wareki(birthday)
 
@@ -411,6 +458,11 @@ if __name__ == '__main__':
 
     print('旺衰：', getsurei_day)
 
-    print(daiun_kanshi)
+    print('')
 
-    print(nenun)
+    if kango:
+        print('干合：', kango)
+        
+    print('')
+
+    disp_daiun_nenun(birthday, daiun_kanshi, nenun)
