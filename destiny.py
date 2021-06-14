@@ -323,15 +323,41 @@ def is_kakikaku(kango, month_shi):
     return henkaku
 
 
+def is_shigo(shi):
+
+    shigo_ = []
+    for i, s in enumerate(shi):
+        shi_idx = kd.shi.index(s)
+        for j in list(range(i, len(shi))):
+            if kd.shigo[shi_idx] == shi[j] and i != j:
+                shigo_.append([[s, i], [kd.shigo[shi_idx], j]])
+
+    return shigo_
+
+
+
 def disp_kango(kango):
 
     if not kango:
         print('干合なし')
         return True
 
-    print('干合:')
+    print('干合：')
     for k in kango:
         print(k[0][0] + '（' + kd.kango_chu[k[0][1]] + '）＋' + k[1][0] + '（' + kd.kango_chu[k[1][1]] + '）→ ' + k[2])
+
+    return True
+
+
+def disp_shigo(shigo):
+
+    if not shigo:
+        print('支合なし')
+        return True
+
+    print('支合：')
+    for s in shigo:
+        print(s[0][0] + '（' + kd.shigo_chu[s[0][1]] + '）＋' + s[1][0] + '（' + kd.shigo_chu[s[1][1]] + '）')
 
     return True
 
@@ -463,6 +489,12 @@ if __name__ == '__main__':
         kango = is_kango([year_kanshi[0], month_kanshi[0], day_kanshi[0], time_kanshi[0],
                           year_zokan[0], month_zokan[0], day_zokan[0], time_zokan[0]])
 
+    # 支合を判定する
+    if none_flag:
+        shigo = is_shigo([year_kanshi[1], month_kanshi[1], day_kanshi[1]])
+    else:
+        shigo = is_shigo([year_kanshi[1], month_kanshi[1], day_kanshi[1], time_kanshi[1]])
+
     # 化気格を判定する
     if kango:
         kakikaku = is_kakikaku(kango, month_kanshi[1])
@@ -531,6 +563,9 @@ if __name__ == '__main__':
 
     if kango:
         print(kakikaku)
+        print('')
+
+    s = disp_shigo(shigo)
 
     print('')
 
