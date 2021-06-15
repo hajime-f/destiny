@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import kanshi_data as kd
+import itertools
 from datetime import datetime as dt
 from datetime import timedelta as td
 
@@ -295,7 +296,7 @@ def is_kango(tenkan_zokan):
         for j in list(range(i, len(tenkan_zokan))):
             if kd.kango[tz_idx] == tenkan_zokan[j] and i != j:
                 kango_.append([[tz1, i], [tenkan_zokan[j], j], kd.kango_henka[tz_idx]])
-            
+
     return kango_
 
 
@@ -335,8 +336,47 @@ def is_shigo(shi):
     return shigo_
 
 
+def is_sango(shi, day_kan):
 
-def disp_kango(kango):
+    sango_ = []
+    sango_flag = False
+    
+    for s in kd.sango:
+        for v in itertools.permutations(list(range(0,len(shi))), 3):
+            if [shi[v[0]], shi[v[1]], shi[v[2]]] == s[0]:
+                sango_.append([shi[v[0]], shi[v[1]], shi[v[2]]])
+                shi_ = s[1]
+                kan_ = s[2]
+                sango_flag = True
+                break
+        if sango_flag == True:
+            break
+
+    if not sango_:
+        return sango_
+    elif shi[2] in sango_[0]:
+        sango_.append(shi_)
+        sango_.append(kan_)
+        sango_.append(lookup_tsuhen(day_kan, kan_))
+    
+    return sango_
+
+def disp_sango(sango):
+
+    if not sango:
+        print('三合なし')
+        return True
+
+    print('三合：')
+    if len(sango) > 1:
+        print(sango[0][0] + ', ' + sango[0][1] + ', ' + sango[0][2] + 'の三合' + sango[1] + '局により、月柱蔵干（用神）が' + sango[2] + '（' + sango[3] + '）に変化')
+    else:
+        print(sango[0][0] + ', ' + sango[0][1] + ', ' + sango[0][2] + 'の三合会局（用神変化なし）')
+        
+    return True
+
+
+def disp_kango(kango, flag):
 
     if not kango:
         print('干合なし')
@@ -344,7 +384,10 @@ def disp_kango(kango):
 
     print('干合：')
     for k in kango:
-        print(k[0][0] + '（' + kd.kango_chu[k[0][1]] + '）＋' + k[1][0] + '（' + kd.kango_chu[k[1][1]] + '）→ ' + k[2])
+        if flag:
+            print(k[0][0] + '（' + kd.kango_chu1[k[0][1]] + '）＋' + k[1][0] + '（' + kd.kango_chu1[k[1][1]] + '）→ ' + k[2])
+        else:
+            print(k[0][0] + '（' + kd.kango_chu2[k[0][1]] + '）＋' + k[1][0] + '（' + kd.kango_chu2[k[1][1]] + '）→ ' + k[2])
 
     return True
 
@@ -499,6 +542,12 @@ if __name__ == '__main__':
     if kango:
         kakikaku = is_kakikaku(kango, month_kanshi[1])
 
+    # 三合を判定する
+    if none_flag:
+        sango = is_sango([year_kanshi[1], month_kanshi[1], day_kanshi[1]], day_kanshi[0])
+    else:
+        sango = is_sango([year_kanshi[1], month_kanshi[1], day_kanshi[1], time_kanshi[1]], day_kanshi[0])
+
     # 和暦を得る
     wareki = kd.convert_to_wareki(birthday)
 
@@ -557,7 +606,7 @@ if __name__ == '__main__':
 
     print('')
 
-    k = disp_kango(kango)
+    k = disp_kango(kango, none_flag)
 
     print('')
 
@@ -569,6 +618,10 @@ if __name__ == '__main__':
 
     print('')
 
+    s = disp_sango(sango)
+
+    print('')
+    
     d = disp_daiun_nenun(birthday, daiun_kanshi, nenun)
 
     
