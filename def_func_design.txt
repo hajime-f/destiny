@@ -1,0 +1,43 @@
+is_setsuiri(d_time, month)
+＜機能＞
+d_time で与えられた年月日が、month で与えられた月に対して節入りしているか否かを判定する
+＜入力＞
+- d_time（datetime）：判定したい年月日
+- month（int）：基準となる月
+＜出力＞
+節入りしている（True）またはしていない（False）の二値
+＜異常検出＞
+判定不可能の場合は None を返す
+
+find_year_kanshi(birthday)
+＜機能＞
+birthday で与えられた生年月日の年干支を取得する
+＜入力＞
+birthday（datetime）：生年月日
+＜出力＞
+y_kanshi_list（list）：年干・年支番号のペアを格納したリスト
+＜異常検出＞
+取得できなかった場合はエラーメッセージを出力して強制終了する
+
+find_month_kanshi(birthday, year_kan)
+＜機能＞
+birthday で与えられた生年月日の月干支を取得する
+＜入力＞
+- birthday（datetime）：生年月日
+- year_kan（string）：年干
+＜出力＞
+m_kanshi_list（list）：月干・月支番号のペアを格納したリスト
+＜異常検出＞
+取得できなかった場合はエラーメッセージを出力して強制終了する
+
+find_day_kanshi(birthday)
+＜機能＞
+birthday で与えられた生年月日の日干支を取得する
+＜入力＞
+birthday（datetime）：生年月日
+＜出力＞
+d_kanshi_list（list）：日干・日支番号のペアを格納したリスト
+＜異常検出＞
+取得できなかった場合はエラーメッセージを出力して強制終了する
+
+find_time_kanshi(birthday, day_kan, none_flag)

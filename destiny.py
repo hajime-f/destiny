@@ -440,11 +440,11 @@ def disp_daiun_nenun(d_time, daiun, nenun):
 
 if __name__ == '__main__':
 
-    year = 1978
-    month = 9
-    day = 26
-    hour = 13
-    minute = 51
+    year = 1950
+    month = 8
+    day = 27
+    hour = None
+    minute = None
     sex = 0  # 0->男, 1->女
 
     # 生まれの年月日時分の datetime を生成する
@@ -454,7 +454,7 @@ if __name__ == '__main__':
     else:
         birthday = dt(year = year, month = month, day = day, hour = hour, minute = minute)
         # サマータイムを考慮する
-        if dt(year=1948, month=5, day=2) <= birthday < dt(year=1951, month=9, day=8):
+        if (dt(year=1948, month=5, day=2) <= birthday < dt(year=1951, month=9, day=8)) and (hour is not None):
             birthday = dt(year=birthday.year, month=birthday.month, day=birthday.day,
                           hour=birthday.hour - 1, minute=birthday.minute)
         none_flag = False
