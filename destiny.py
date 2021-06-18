@@ -1,8 +1,39 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import kanshi_data as kd
+import sys
 from datetime import datetime as dt
 from datetime import timedelta as td
+
+def build_birthday_data(args):
+
+    # 起動時の引数から生年月日・性別などのデータを構築する
+    
+    args = sys.argv
+    try:
+        b = args[1]
+        t = args[2]
+        sex = int(args[3])
+        birthday = dt.strptime(b + ' ' + t, '%Y-%m-%d %H:%M')
+        t_flag = True
+        # サマータイムを考慮する
+        if (dt(year=1948, month=5, day=2) <= birthday < dt(year=1951, month=9, day=8)) and (hour is not None):
+            birthday = dt(year = birthday.year, month = birthday.month, day = birthday.day,
+                          hour = birthday.hour - 1, minute = birthday.minute)
+        
+    except IndexError:
+        try:
+            b = args[1]
+            sex = int(args[2])
+            birthday = dt.strptime(b, '%Y-%m-%d')
+            t_flag = False
+            
+        except IndexError:
+            print('引数の指定を確認してください。')
+            exit()
+
+    return birthday, sex, t_flag
+
 
 def is_setsuiri(birthday, month):
     
@@ -163,7 +194,12 @@ def find_zokan(birthday, shi):
 
 def build_meishiki(birthday, t_flag):
 
+    # ＜機能＞
     # birthday で与えられた生年月日の命式を組み立てる
+    # ＜入力＞
+    #   - birthday（datetime）：生年月日
+    # ＜出力＞
+    #   - meishiki（dict）：命式の情報を含む辞書型の変数
     
     # 天干・地支を得る
     y_kan, y_shi = find_year_kanshi(birthday)
@@ -203,33 +239,45 @@ def build_meishiki(birthday, t_flag):
         "getchu": getchu,
         "nitchu": nitchu,
         "jichu" : jichu,
+        "nitchu_tenkan": d_kan,
+        "getchu_zokan": m_zkan,
     }
 
     return meishiki
+
+
+def show_age(birthday, sex, t_flag):
+
+    if sex == 0:
+        sex_str = '男命'
+    else:
+        sex_str = '女命'
+    
+    wareki = kd.convert_to_wareki(birthday)
+
+    if t_flag:
+        print(str(birthday.year) + '年（' + wareki + '）' + str(birthday.month) + '月' + str(birthday.day) + '日 ' + str(birthday.hour) + '時' + str(birthday.minute) + '分生 ' + sex_str)
+    else:
+        print(str(birthday.year) + '年（' + wareki + '）' + str(birthday.month) + '月' + str(birthday.day) + '日生（時刻不明） ' + sex_str)
+    
+
+def show_meishiki(meishiki):
+
+    print()
+    print('|   時 柱    |   日 柱    |   月 柱    |   年 柱    |')    
+    print('+===================================================+')   # 56文字    
     
         
 if __name__ == '__main__':
 
-    year = 1978
-    month = 9
-    day = 26
-    hour = 13
-    minute = 51
-    sex = 0  # 0->男, 1->女
-
-    # 生まれの年月日時分の datetime を生成する
-    if (hour is None) or (minute is None):
-        birthday = dt(year = year, month = month, day = day)
-        t_flag = False
-    else:
-        birthday = dt(year = year, month = month, day = day, hour = hour, minute = minute)
-        # サマータイムを考慮する
-        if (dt(year=1948, month=5, day=2) <= birthday < dt(year=1951, month=9, day=8)) and (hour is not None):
-            birthday = dt(year = birthday.year, month = birthday.month, day = birthday.day,
-                          hour = birthday.hour - 1, minute = birthday.minute)
-        t_flag = True
+    # 起動時の引数から生年月日・性別などのデータを構築する
+    birthday, sex, t_flag = build_birthday_data(sys.argv)
 
     # 命式を組成する
     meishiki = build_meishiki(birthday, t_flag)
-    
-    print(meishiki)
+
+    # 生年月日・性別を出力する
+    show_age(birthday, sex, t_flag)
+
+    # 命式を出力する
+    show_meishiki(meishiki)

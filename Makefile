@@ -1,5 +1,5 @@
 all:
-	poetry run python destiny.py
+	poetry run python destiny.py $(BIRTH) $(SEX)
 
 install:
 	poetry install

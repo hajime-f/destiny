@@ -80,4 +80,16 @@ birthday で与えられた生年月日の命式を組み立てる
   - getchu（list）：月天干・月地支・月蔵干の番号リスト
   - nitchu（list）：日天干・日地支・日蔵干の番号リスト
   - jichu（list） ：時天干・時地支・時蔵干の番号リスト
+  - nitchu_tenkan（int）：日柱天干の番号
+  - getchu_zokan（int） ：月柱蔵干の番号
 
+find_tsuhen(s_kan, kan)
+＜機能＞
+s_kan に対する kan の通変を取得する
+＜入力＞
+- s_kan：基準となる干の番号
+- kan：通変を求めたい干の番号
+＜出力＞
+- kan の通変の番号
+＜異常検出＞
+取得できなかった場合はエラーメッセージを出力して強制終了する
