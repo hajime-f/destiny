@@ -5,6 +5,8 @@ import sys
 from datetime import datetime as dt
 from datetime import timedelta as td
 
+meishiki = {}
+
 def build_birthday_data(args):
 
     # 起動時の引数から生年月日・性別などのデータを構築する
@@ -31,7 +33,7 @@ def build_birthday_data(args):
         except IndexError:
             print('引数の指定を確認してください。')
             exit()
-
+            
     return birthday, sex, t_flag
 
 
@@ -192,7 +194,7 @@ def find_zokan(birthday, shi):
         exit()
 
 
-def build_meishiki(birthday, t_flag):
+def append_kanshi(birthday, t_flag):
 
     # ＜機能＞
     # birthday で与えられた生年月日の命式を組み立てる
@@ -231,20 +233,58 @@ def build_meishiki(birthday, t_flag):
     nitchu = [d_kan, d_shi, d_zkan]
     jichu  = [t_kan, t_shi, t_zkan]
 
-    meishiki = {
-        "tenkan": tenkan,
-        "chishi": chishi,
-        "zokan" : zokan,
-        "nenchu": nenchu,
-        "getchu": getchu,
-        "nitchu": nitchu,
-        "jichu" : jichu,
-        "nitchu_tenkan": d_kan,
-        "getchu_zokan": m_zkan,
-    }
+    # グローバル変数 meishiki に情報を追加していく
+    meishiki.update({"tenkan": tenkan})
+    meishiki.update({"chishi": chishi})
+    meishiki.update({"zokan" : zokan})
+    meishiki.update({"nenchu": nenchu})
+    meishiki.update({"getchu": getchu})
+    meishiki.update({"nitchu": nitchu})
+    meishiki.update({"jichu" : jichu})
+    meishiki.update({"nitchu_tenkan": d_kan})
+    meishiki.update({"getchu_zokan": m_zkan})
 
-    return meishiki
 
+def find_tsuhen(s_kan, kan_list):
+
+    # s_kan に対する kan_ の通変を取得する
+    
+    kl = []
+    for kan_ in kan_list:
+        kl.append(kd.kan_tsuhen[s_kan][kan_])
+    
+    return kl
+
+
+def append_tsuhen():
+
+    # 命式に通変を追加する
+    
+    kl1 = find_tsuhen(meisiki["nitchu_tenkan"], meishiki["tenkan"])
+    meishiki.update({"tenkan_tsuhen": kl1})
+    
+    kl2 = find_tsuhen(meisiki["nitchu_tenkan"], meishiki["zokan"])
+    meishiki.update({"zokan_tsuhen": kl2})
+
+
+def find_twelve_fortune(s_shi, shi_list):
+
+    # s_shi に対する shi_ の十二運を取得する
+
+    sl = []
+    for shi_ in shi_list:
+        sl.append(kd.twelve_table[s_shi][shi_])
+
+    return sl
+
+
+def append_twelve_fortune():
+
+    # 命式に十二運を追加する
+
+    sl = find_twelve_fortune(meishiki["nitchu_tenkan"], meishiki["chishi"])
+    meishiki.update({"twelve_fortune": sl})
+    
 
 def show_age(birthday, sex, t_flag):
 
@@ -259,13 +299,13 @@ def show_age(birthday, sex, t_flag):
         print(str(birthday.year) + '年（' + wareki + '）' + str(birthday.month) + '月' + str(birthday.day) + '日 ' + str(birthday.hour) + '時' + str(birthday.minute) + '分生 ' + sex_str)
     else:
         print(str(birthday.year) + '年（' + wareki + '）' + str(birthday.month) + '月' + str(birthday.day) + '日生（時刻不明） ' + sex_str)
-    
+
 
 def show_meishiki(meishiki):
 
     print()
     print('|   時 柱    |   日 柱    |   月 柱    |   年 柱    |')    
-    print('+===================================================+')   # 56文字    
+    print('+============+============+============+============+')   # 56文字    
     
         
 if __name__ == '__main__':
@@ -274,10 +314,11 @@ if __name__ == '__main__':
     birthday, sex, t_flag = build_birthday_data(sys.argv)
 
     # 命式を組成する
-    meishiki = build_meishiki(birthday, t_flag)
+    append_kanshi(birthday, t_flag)
 
     # 生年月日・性別を出力する
     show_age(birthday, sex, t_flag)
 
     # 命式を出力する
-    show_meishiki(meishiki)
+    # show_meishiki(meishiki)
+    print(meishiki)
