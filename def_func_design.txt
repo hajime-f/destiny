@@ -103,3 +103,21 @@ convert_year_ratio(birthday)
 - brithday（datetime）：生年月日
 ＜出力＞
 - year_ratio_list（list）：10年に占める割合
+
+is_junun_gyakuun(year_kan, sex)
+＜機能＞
+大運が順運か逆運かを判定する
+＜入力＞
+- y_kan（int）：年干の番号
+- sex（int）：性別の番号
+＜出力＞
+- 順運（1）または逆運（0）の二値
+
+generate_daiun(birthday, sex)
+＜機能＞
+大運を導出する
+＜入力＞
+- birthday（datetime）：生年月日
+- sex（int）：性別の番号
+＜出力＞
+

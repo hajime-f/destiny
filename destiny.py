@@ -82,13 +82,13 @@ def find_year_kanshi(birthday):
         exit()
 
 
-def find_month_kanshi(birthday, year_kan):
+def find_month_kanshi(birthday, y_kan):
 
     # ＜機能＞
     # birthday で与えられた生年月日の月干支を取得する
     # ＜入力＞
     #   - birthday（datetime）：生年月日
-    #   - year_kan（string）：年干の番号
+    #   - y_kan（string）：年干の番号
     # ＜出力＞
     #   - m_kan（int）：月干の番号
     #   - m_shi（int）：月支の番号
@@ -97,7 +97,7 @@ def find_month_kanshi(birthday, year_kan):
 
     month = birthday.month - 1 + is_setsuiri(birthday, birthday.month)
     try:
-        m_kan, m_shi = kd.month_kanshi[year_kan][month]
+        m_kan, m_shi = kd.month_kanshi[y_kan][month]
         return m_kan, m_shi
     except:
         print('月干支の計算で例外が送出されました。')
@@ -293,9 +293,9 @@ def convert_year_ratio(birthday):
     # 10年に占める割合に直す。
     # 例：8日：22日→3年：7年
     # ＜入力＞
-    # - brithday（datetime）：生年月日
+    #   - brithday（datetime）：生年月日
     # ＜出力＞
-    # - year_ratio_list（list）：10年に占める割合    
+    #   - year_ratio_list（list）：10年に占める割合    
     
     for s in kd.setsuiri:
         p = is_setsuiri(dt(year = birthday.year, month = birthday.month, day = birthday.day), birthday.month)
@@ -316,7 +316,74 @@ def convert_year_ratio(birthday):
     return year_ratio_list
 
 
+def is_junun_gyakuun(y_kan, sex):
 
+    # ＜機能＞
+    # 大運が順運か逆運かを判定する
+    # ＜入力＞
+    #   - y_kan（int）：年柱天干の番号
+    #   - sex（int）：性別の番号
+    # ＜出力＞
+    #   - 順運（1）または逆運（0）の二値
+    # ＜異常検出＞
+    # 取得できなかった場合はエラーメッセージを出力して強制終了する
+
+    if (((y_kan % 2) == 0) and (sex == 0)) or (((y_kan % 2) == 1) and (sex == 1)):
+       return 1   # 年柱天干が陽干の男命 or 年柱天干が陰干の女命は、順運
+   
+    elif (((y_kan % 2) == 1) and (sex == 0)) or (((y_kan % 2) == 0) and (sex == 1)):
+       return 0   # 年柱天干が陽干の女命 or 年柱天干が陰干の男命は、逆運
+   
+    else:
+        print('大運の順逆を判定できませんでした。')
+        exit()
+
+
+def find_kanshi_idx(kan, shi):
+
+    # 六十干支表から所定の干支のインデクスを返す
+    
+    for idx, sk in kd.sixty_kanshi:
+        if (sk[0] == kan) and (sk[1] == shi):
+            return idx
+    
+    print('干支が見つかりませんでした。')
+    exit()
+        
+
+def generate_daiun(birthday, sex):
+
+    # ＜機能＞
+    # 大運を導出する
+    # ＜入力＞
+    #   - birthday（datetime）：生年月日
+    #   - sex（int）：性別の番号
+    # ＜出力＞
+    #   - daiun（list）：大運のリスト
+    
+    year_ratio_list = convert_year_ratio(birthday)
+    
+    if is_junun_gyakuun(meishiki["nenchu"][0], sex):  # 順運か逆運か？
+        ry = year_ratio_list[1]  # 次の節入日が立運の起算日
+        p = 1                    # 六十干支表を順にたどる
+    else:
+        ry = year_ratio_list[0]  # 前の節入日が立運の起算日
+        p = -1                   # 六十干支表を逆にたどる
+
+    idx = find_kanshi_idx(meishiki["getchu"][0], meishiki["getchu"][1])
+
+    daiun = []
+    for n in list(range(10, 140, 10)):
+        kanshi_ = kd.sixty_kanshi[idx]
+        tsuhen_ = find_tsuhen(meishiki["nitchu_tenkan"], kanshi_[0])
+        t_fortune_ = find_twelve_fortune(meishiki["nitchu_tenkan"], kanshi_[1])
+        daiun.append([ry, kanshi_[0], kanshi_[1], tsuhen_, t_fortune_])
+        ry += 10
+        idx += p
+        if idx >= 60:
+            idx = 0
+
+    meishiki.update({"daiun": daiun})
     
 
 def show_age(birthday, sex, t_flag):
