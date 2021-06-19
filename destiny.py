@@ -169,10 +169,10 @@ def find_zokan(birthday, shi):
     # ＜機能＞
     # birthday で与えられた生年月日の shi に対応する蔵干を取得する
     # ＜入力＞
-    # - birthday（datetime）：生年月日
-    # - shi（int）：年支、月支、日支、時支の番号
+    #   - birthday（datetime）：生年月日
+    #   - shi（int）：年支、月支、日支、時支の番号
     # ＜出力＞
-    # - z_kan（int）：蔵干の番号
+    #   - z_kan（int）：蔵干の番号
     # ＜異常検出＞
     # 取得できなかった場合はエラーメッセージを出力して強制終了する
 
@@ -284,6 +284,39 @@ def append_twelve_fortune():
 
     sl = find_twelve_fortune(meishiki["nitchu_tenkan"], meishiki["chishi"])
     meishiki.update({"twelve_fortune": sl})
+
+
+def convert_year_ratio(birthday):
+
+    # ＜機能＞
+    # 生年月日から前の節入日までの日数と、生年月日から次の節入日までの日数との比を、
+    # 10年に占める割合に直す。
+    # 例：8日：22日→3年：7年
+    # ＜入力＞
+    # - brithday（datetime）：生年月日
+    # ＜出力＞
+    # - year_ratio_list（list）：10年に占める割合    
+    
+    for s in kd.setsuiri:
+        p = is_setsuiri(dt(year = birthday.year, month = birthday.month, day = birthday.day), birthday.month)
+        if (s[0] == birthday.year) and (s[1] == birthday.month):
+            previous_setsuiri =  dt(year = s[0], month = s[1] + p, day = s[2], hour = s[3], minute = s[4])
+            next_setsuiri = dt(year = s[0], month = s[1] + p + 1, day = s[2], hour = s[3], minute = s[4])
+            break
+
+    diff_previous = birthday - previous_setsuiri   # 生年月日から前の節入日までの日数
+    diff_next = next_setsuiri - birthday           # 生年月日から次の節入日までの日数
+
+    # ３日間を１年に置き換えるので、３除した値を丸める
+    p_year = round((diff_previous.days + (diff_previous.seconds / 60 / 60 / 24)) / 3)
+    n_year = round((diff_next.days + (diff_next.seconds / 60 / 60 / 24)) / 3)
+
+    year_ratio_list = [p_year, n_year]
+    
+    return year_ratio_list
+
+
+
     
 
 def show_age(birthday, sex, t_flag):
