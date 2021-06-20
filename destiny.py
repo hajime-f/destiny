@@ -247,7 +247,7 @@ def append_kanshi(birthday, t_flag):
 
 def find_tsuhen(s_kan, kan_list):
 
-    # s_kan に対する kan_ の通変を取得する
+    # s_kan に対する kan_list の通変をそれぞれ取得する
     
     kl = []
     for kan_ in kan_list:
@@ -269,7 +269,7 @@ def append_tsuhen():
 
 def find_twelve_fortune(s_shi, shi_list):
 
-    # s_shi に対する shi_ の十二運を取得する
+    # s_shi に対する shi_list の十二運をそれぞれ取得する
 
     sl = []
     for shi_ in shi_list:
@@ -358,7 +358,7 @@ def find_kanshi_idx(kan, shi):
 
     # 六十干支表から所定の干支のインデクスを返す
     
-    for idx, sk in kd.sixty_kanshi:
+    for idx, sk in enumerate(kd.sixty_kanshi):
         if (sk[0] == kan) and (sk[1] == shi):
             return idx
     
@@ -366,7 +366,7 @@ def find_kanshi_idx(kan, shi):
     exit()
         
 
-def generate_daiun(birthday, sex):
+def append_daiun(birthday, sex):
 
     # ＜機能＞
     # 大運を導出する
@@ -390,8 +390,8 @@ def generate_daiun(birthday, sex):
     daiun = []
     for n in list(range(10, 140, 10)):
         kanshi_ = kd.sixty_kanshi[idx]
-        tsuhen_ = find_tsuhen(meishiki["nitchu_tenkan"], kanshi_[0])
-        t_fortune_ = find_twelve_fortune(meishiki["nitchu_tenkan"], kanshi_[1])
+        tsuhen_ = kd.kan_tsuhen[meishiki["nitchu_tenkan"]].index(kanshi_[0])
+        t_fortune_ = kd.twelve_table[meishiki["nitchu_tenkan"]][kanshi_[1]]
         daiun.append([ry, kanshi_[0], kanshi_[1], tsuhen_, t_fortune_])
         ry += 10
         idx += p
@@ -410,6 +410,7 @@ def show_age(birthday, sex, t_flag):
     
     wareki = kd.convert_to_wareki(birthday)
 
+    print()
     if t_flag:
         print(str(birthday.year) + '年（' + wareki + '）' + str(birthday.month) + '月' + str(birthday.day) + '日 ' + str(birthday.hour) + '時' + str(birthday.minute) + '分生 ' + sex_str)
     else:
@@ -457,6 +458,9 @@ if __name__ == '__main__':
 
     # 命式に通変と十二運を追加する
     append_additional_info()
+
+    # 命式に大運を追加する
+    append_daiun(birthday, sex)
 
     # 生年月日・性別を出力する
     show_age(birthday, sex, t_flag)
