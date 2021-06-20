@@ -7,7 +7,7 @@ from datetime import timedelta as td
 
 meishiki = {}
 
-def build_birthday_data(args):
+def build_birthday_data():
 
     # 起動時の引数から生年月日・性別などのデータを構築する
     
@@ -197,7 +197,7 @@ def find_zokan(birthday, shi):
 def append_kanshi(birthday, t_flag):
 
     # ＜機能＞
-    # birthday で与えられた生年月日の命式を組み立てる
+    # birthday で与えられた生年月日の干支を命式に追加する
     # ＜入力＞
     #   - birthday（datetime）：生年月日
     # ＜出力＞
@@ -369,7 +369,7 @@ def find_kanshi_idx(kan, shi):
 def append_daiun(birthday, sex):
 
     # ＜機能＞
-    # 大運を導出する
+    # 大運を命式に追加する
     # ＜入力＞
     #   - birthday（datetime）：生年月日
     #   - sex（int）：性別の番号
@@ -399,6 +399,29 @@ def append_daiun(birthday, sex):
             idx = 0
 
     meishiki.update({"daiun": daiun})
+
+
+def append_nenun(birthday):
+
+    # ＜機能＞
+    # 年運を命式に追加する
+    # ＜入力＞
+    #   - birthday（datetime）：生年月日
+    # ＜出力＞
+    #   - nenun（list）：年運のリスト
+    
+    idx = (birthday.year - 3) % 60 - 1 + is_setsuiri(birthday, 2)
+    nenun = []
+    for n in list(range(0, 120)):
+        kanshi_ = kd.sixty_kanshi[idx]
+        tsuhen_ = kd.kan_tsuhen[meishiki["nitchu_tenkan"]].index(kanshi_[0])
+        t_fortune_ = kd.twelve_table[meishiki["nitchu_tenkan"]][kanshi_[1]]
+        nenun.append([n, kanshi_[0], kanshi_[1], tsuhen_, t_fortune_])
+        idx += 1
+        if idx >= 60:
+            idx = 0
+
+    meishiki.update({"nenum": nenun})
     
 
 def show_age(birthday, sex, t_flag):
@@ -419,6 +442,8 @@ def show_age(birthday, sex, t_flag):
 
 def show_meishiki(meishiki):
 
+    # 命式を整形して出力する
+    
     tenkan = [kd.kan[i] for i in meishiki["tenkan"]]
     tenkan_tsuhen = [kd.tsuhen[i] for i in meishiki["tenkan_tsuhen"]]
     chishi = [kd.shi[i] for i in meishiki["chishi"]]
@@ -451,9 +476,9 @@ def show_meishiki(meishiki):
 if __name__ == '__main__':
 
     # 起動時の引数から生年月日・性別などのデータを構築する
-    birthday, sex, t_flag = build_birthday_data(sys.argv)
+    birthday, sex, t_flag = build_birthday_data()
 
-    # 命式を組成する
+    # 命式に干支を追加する
     append_kanshi(birthday, t_flag)
 
     # 命式に通変と十二運を追加する
@@ -461,6 +486,9 @@ if __name__ == '__main__':
 
     # 命式に大運を追加する
     append_daiun(birthday, sex)
+
+    # 命式に年運を追加する
+    append_nenun(birthday)
 
     # 生年月日・性別を出力する
     show_age(birthday, sex, t_flag)
