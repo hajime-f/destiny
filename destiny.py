@@ -251,8 +251,8 @@ def find_tsuhen(s_kan, kan_list):
     
     kl = []
     for kan_ in kan_list:
-        kl.append(kd.kan_tsuhen[s_kan][kan_])
-    
+        kl.append(kd.kan_tsuhen[s_kan].index(kan_))
+        
     return kl
 
 
@@ -260,10 +260,10 @@ def append_tsuhen():
 
     # 命式に通変を追加する
     
-    kl1 = find_tsuhen(meisiki["nitchu_tenkan"], meishiki["tenkan"])
+    kl1 = find_tsuhen(meishiki["nitchu_tenkan"], meishiki["tenkan"])
     meishiki.update({"tenkan_tsuhen": kl1})
     
-    kl2 = find_tsuhen(meisiki["nitchu_tenkan"], meishiki["zokan"])
+    kl2 = find_tsuhen(meishiki["nitchu_tenkan"], meishiki["zokan"])
     meishiki.update({"zokan_tsuhen": kl2})
 
 
@@ -285,6 +285,21 @@ def append_twelve_fortune():
     sl = find_twelve_fortune(meishiki["nitchu_tenkan"], meishiki["chishi"])
     meishiki.update({"twelve_fortune": sl})
 
+
+def append_additional_info():
+
+    # ＜機能＞
+    # 命式に通変と十二運を追加する
+    # ＜入力＞
+    # なし
+    # ＜出力＞
+    #   - グローバル変数 meishiki に下記の情報を追加する
+    #     - tenkan_tsuhen（list）：天干の通変の番号
+    #     - zokan_tsuhen（list）：蔵干の通変の番号
+    #     - twelve_fortune（list）：地支の十二運
+    append_tsuhen()
+    append_twelve_fortune()
+    
 
 def convert_year_ratio(birthday):
 
@@ -403,9 +418,33 @@ def show_age(birthday, sex, t_flag):
 
 def show_meishiki(meishiki):
 
+    tenkan = [kd.kan[i] for i in meishiki["tenkan"]]
+    tenkan_tsuhen = [kd.tsuhen[i] for i in meishiki["tenkan_tsuhen"]]
+    chishi = [kd.shi[i] for i in meishiki["chishi"]]
+    twelve_fortune = [kd.twelve_fortune[i] for i in meishiki["twelve_fortune"]]
+    zokan = [kd.kan[i] for i in meishiki["zokan"]]
+    zokan_tsuhen = [kd.tsuhen[i] for i in meishiki["zokan_tsuhen"]]
+
     print()
-    print('|   時 柱    |   日 柱    |   月 柱    |   年 柱    |')    
-    print('+============+============+============+============+')   # 56文字    
+    print('|   生  時   |   生  日   |   生  月   |   生  年   |')    
+    print('+============+============+============+============+')   # 56文字
+    print('| ' + tenkan[3] + '（' + tenkan_tsuhen[3] + '） ' +
+          '|     ' + tenkan[2] +
+          '     | ' + tenkan[1] + '（' + tenkan_tsuhen[1] + '） ' +
+          '| ' + tenkan[0] + '（' + tenkan_tsuhen[0] + '）' +
+          ' |')
+    print('+------------+------------+------------+------------+')
+    print('|  ' + chishi[3] + '（' + twelve_fortune[3] + '）  ' +
+          '|  ' + chishi[2] + '（' + twelve_fortune[2] + '）  ' +
+          '|  ' + chishi[1] + '（' + twelve_fortune[1] + '）  ' +
+          '|  ' + chishi[0] + '（' + twelve_fortune[0] + '）  ' +
+          '|')
+    print('+------------+------------+------------+------------+')
+    print('| ' + zokan[3] + '（' + zokan_tsuhen[3] + '） ' +
+          '| ' + zokan[2] + '（' + zokan_tsuhen[2] + '） ' +
+          '| ' + zokan[1] + '（' + zokan_tsuhen[1] + '） ' +
+          '| ' + zokan[0] + '（' + zokan_tsuhen[0] + '） ' +
+          '|')
     
         
 if __name__ == '__main__':
@@ -416,9 +455,12 @@ if __name__ == '__main__':
     # 命式を組成する
     append_kanshi(birthday, t_flag)
 
+    # 命式に通変と十二運を追加する
+    append_additional_info()
+
     # 生年月日・性別を出力する
     show_age(birthday, sex, t_flag)
 
     # 命式を出力する
-    # show_meishiki(meishiki)
+    show_meishiki(meishiki)
     print(meishiki)

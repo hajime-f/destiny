@@ -120,4 +120,4 @@ generate_daiun(birthday, sex)
 - birthday（datetime）：生年月日
 - sex（int）：性別の番号
 ＜出力＞
-
+- daiun（list）：大運のリスト
