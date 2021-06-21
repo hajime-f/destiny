@@ -452,7 +452,7 @@ def append_kango():
     # ＜機能＞
     # 干合を命式に追加する
     # ＜入力＞
-    # なし
+    #   なし
     # ＜出力＞
     #   - 干合のリスト
     #     [[干合する干１, 干１の場所（0〜7）], [干合する干２, 干２の場所], 変化する五行]
@@ -470,6 +470,27 @@ def append_kango():
     meishiki.update({"kango": kango})
     
 
+def append_shigo():
+
+    # ＜機能＞
+    # 支合を命式に追加する
+    # ＜入力＞
+    #   なし
+    # ＜出力＞
+    #   - 支合のリスト
+    #     [[支合する支１, 支１の場所（0〜3）], [支合する支２, 支２の場所]]
+    
+    chishi = meishiki["chishi"]
+    
+    shigo = []
+    for i, s in enumerate(chishi):
+        for j in list(range(i, len(chishi))):
+            if kd.shigo[s] == chishi[j] and i != j:
+                shigo.append([[s, i], [kd.shigo[s], j]])
+
+    meishiki.update({"shigo": shigo})
+
+    
 def show_age(birthday, sex, t_flag):
 
     # 生年月日・年齢・性別などの基本情報を出力する
@@ -602,6 +623,19 @@ def show_additional_info(birthday, t_flag):
             k2 = kd.kan[k[1][0]]         # 干２
             g  = kd.gogyo[k[2]]
             print(b1 + 'の「' + k1 + '」が、' + b2 + 'の「' + k2 + '」と干合して「' + g + '」に五行変化')
+
+    print()
+    print('＜支合＞')
+    if not meishiki["shigo"]:
+        print('支合なし')
+    else:
+        for s in meishiki["shigo"]:
+            b1 = kd.shigo_chu[s[0][1]]   # 支１の場所
+            k1 = kd.shi[s[0][0]]         # 支１
+            b2 = kd.shigo_chu[s[1][1]]   # 支２の場所
+            k2 = kd.shi[s[1][0]]         # 支２
+            print(b1 + 'の「' + k1 + '」が、' + b2 + 'の「' + k2 + '」と支合する')
+            
     
     
     
@@ -625,6 +659,7 @@ if __name__ == '__main__':
     
     append_getsurei(birthday)
     append_kango()
+    append_shigo()
     
     # 生年月日・性別を出力する
     show_age(birthday, sex, t_flag)
