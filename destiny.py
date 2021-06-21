@@ -484,6 +484,8 @@ def append_shigo():
     
     shigo = []
     for i, s in enumerate(chishi):
+        if s == -1:
+            continue
         for j in list(range(i, len(chishi))):
             if kd.shigo[s] == chishi[j] and i != j:
                 shigo.append([[s, i], [kd.shigo[s], j]])
@@ -491,6 +493,21 @@ def append_shigo():
     meishiki.update({"shigo": shigo})
 
 
+def append_hogo():
+
+    hogo = False
+    chishi = meishiki["chishi"]
+    for i, h in enumerate(kd.hogo):
+        if h in chishi:
+            hogo = True
+            break
+
+    if hogo:
+        meishiki.update({"hogo": kd.hogo[i]})
+    else:
+        meishiki.update({"hogo": []})
+
+    
 def append_hitsuchu():
 
     # ＜機能＞
@@ -504,6 +521,8 @@ def append_hitsuchu():
 
     hitsuchu = []
     for i, s in enumerate(chishi):
+        if s == -1:
+            continue
         for j in list(range(i, len(chishi))):
             if kd.hitsuchu[s] == chishi[j] and i != j:
                 hitsuchu.append([[s, i], [kd.hitsuchu[s], j]])
@@ -657,6 +676,13 @@ def show_additional_info(birthday, t_flag):
             print(b1 + 'の「' + k1 + '」が、' + b2 + 'の「' + k2 + '」と支合する')
 
     print()
+    print('＜方合＞')
+    if not meishiki["hogo"]:
+        print('方合なし')
+    else:
+        print(meishiki["hogo"][0] + ', ' + meishiki["hogo"][1] + ', ' + meishiki["hogo"][2] + 'で方合する')
+    
+    print()
     print('＜七冲＞')
     if not meishiki["hitsuchu"]:
         print('七冲なし')
@@ -666,8 +692,7 @@ def show_additional_info(birthday, t_flag):
             k1 = kd.shi[h[0][0]]         # 支１
             b2 = kd.shigo_chu[h[1][1]]   # 支２の場所
             k2 = kd.shi[h[1][0]]         # 支２
-            print(b1 + 'の「' + k1 + '」と、' + b2 + 'の「' + k2 + '」とが冲する')
-            
+            print(b1 + 'の「' + k1 + '」と、' + b2 + 'の「' + k2 + '」とが冲する')            
     
     
     
@@ -692,6 +717,7 @@ if __name__ == '__main__':
     append_getsurei(birthday)
     append_kango()
     append_shigo()
+    append_hogo()
     append_hitsuchu()
     
     # 生年月日・性別を出力する
@@ -700,5 +726,4 @@ if __name__ == '__main__':
     # 命式を出力する
     show_meishiki(t_flag)
     show_daiun_nenun(birthday)
-
     show_additional_info(birthday, t_flag)
