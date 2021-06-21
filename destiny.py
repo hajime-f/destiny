@@ -421,6 +421,31 @@ def append_nenun(birthday):
             idx = 0
 
     meishiki.update({"nenun": nenun})
+
+
+def append_getsurei(birthday):
+
+    # ＜機能＞
+    # 月令の旺衰強弱を命式に追加する
+    # ＜入力＞
+    #   - birthday（datetime）：生年月日
+    # ＜出力＞
+    #   - kd.getsurei に対応する番号
+
+    
+    shi_ = kd.shi[birthday.month]  # 生まれ月の地支を引く（節入りを考慮している？？？）
+    getsurei_ = kd.getsurei_table[meishiki["nitchu_tenkan"]]
+
+    p = False
+    for idx1, gr_ in enumerate(getsurei_):
+        for idx2, g in enumerate(gr_):
+            if shi_ in g:
+                p = True
+                break
+        if p:
+            break
+
+    meishiki.update({"getsurei": idx1})
     
 
 def show_age(birthday, sex, t_flag):
@@ -438,7 +463,7 @@ def show_age(birthday, sex, t_flag):
     else:
         print(str(birthday.year) + '年（' + wareki + '）' + str(birthday.month) + '月' + str(birthday.day) + '日生（時刻不明） ' + sex_str)
 
-
+        
 def show_meishiki(t_flag):
 
     # 命式を整形して出力する
@@ -552,10 +577,13 @@ if __name__ == '__main__':
 
     # 命式に年運を追加する
     append_nenun(birthday)
-
+    
+    append_getsurei(birthday)
+    
     # 生年月日・性別を出力する
     show_age(birthday, sex, t_flag)
 
     # 命式を出力する
     show_meishiki(t_flag)
     show_daiun_nenun(birthday)
+
