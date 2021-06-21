@@ -587,9 +587,86 @@ def append_gai():
                 gai.append([[s, i], [kd.gai[s], j]])
                 
     meishiki.update({"gai": gai})
+
+
+# def is_kakikaku(kango, month_shi):
+
+#     henkaku = ''
+#     p = -1
+#     for k in kango:
+#         if 1 in k[0] and 2 in k[1]:
+#             henkaku = k[2]
+#             p = 1
+#             break
+#         elif 2 in k[0] and 3 in k[1]:
+#             henkaku = k[2]
+#             p = 3
+#             break
+#         else:
+#             pass
+
+#     if henkaku == kd.gogyo_shi[kd.shi.index(month_shi)] and p != -1:
+#         henkaku = kd.chu[p] + 'との干合により化気' + henkaku + '格となる'
+#     else:
+#         henkaku = '化気格なし'
+
+#     return henkaku
+
+
+# def is_sango(shi, day_kan):
+
+#     sango_ = []
+#     sango_flag = False
     
+#     for s in kd.sango:
+#         for v in itertools.permutations(list(range(0,len(shi))), 3):
+#             if [shi[v[0]], shi[v[1]], shi[v[2]]] == s[0]:
+#                 sango_.append([shi[v[0]], shi[v[1]], shi[v[2]]])
+#                 shi_ = s[1]
+#                 kan_ = s[2]
+#                 sango_flag = True
+#                 break
+#         if sango_flag == True:
+#             break
+
+#     if not sango_:
+#         return sango_
+#     elif shi[2] in sango_[0]:
+#         sango_.append(shi_)
+#         sango_.append(kan_)
+#         sango_.append(lookup_tsuhen(day_kan, kan_))
     
+#     return sango_
+
+# def disp_sango(sango):
+
+#     if not sango:
+#         print('三合なし')
+#         return True
+
+#     print('三合：')
+#     if len(sango) > 1:
+#         print(sango[0][0] + ', ' + sango[0][1] + ', ' + sango[0][2] + 'の三合' + sango[1] + '局により、月柱蔵干（用神）が' + sango[2] + '（' + sango[3] + '）に変化')
+#     else:
+#         print(sango[0][0] + ', ' + sango[0][1] + ', ' + sango[0][2] + 'の三合会局（用神変化なし）')
+        
+#     return True
+
+
     
+def append_additional_info(birthday):
+
+    # 命式にその他の情報を追加する
+    
+    append_getsurei(birthday)   # 月令を追加
+    append_kango()              # 干合を追加
+    append_shigo()              # 支合を追加
+    append_hogo()               # 方合を追加
+    append_hitsuchu()           # 七冲を追加
+    append_kei()                # 刑を追加
+    append_gai()                # 害を追加
+    
+
 def show_age(birthday, sex, t_flag):
 
     # 生年月日・年齢・性別などの基本情報を出力する
@@ -796,14 +873,9 @@ if __name__ == '__main__':
 
     # 命式に年運を追加する
     append_nenun(birthday)
-    
-    append_getsurei(birthday)
-    append_kango()
-    append_shigo()
-    append_hogo()
-    append_hitsuchu()
-    append_kei()
-    append_gai()
+
+    # 命式にその他の情報を追加する
+    append_additional_info(birthday)
     
     # 生年月日・性別を出力する
     show_age(birthday, sex, t_flag)
