@@ -490,6 +490,26 @@ def append_shigo():
 
     meishiki.update({"shigo": shigo})
 
+
+def append_hitsuchu():
+
+    # ＜機能＞
+    # 七冲を命式に追加する
+    # ＜入力＞
+    #   なし
+    # ＜出力＞
+    #   - 七冲のリスト
+    
+    chishi = meishiki["chishi"]
+
+    hitsuchu = []
+    for i, s in enumerate(chishi):
+        for j in list(range(i, len(chishi))):
+            if kd.hitsuchu[s] == chishi[j] and i != j:
+                hitsuchu.append([[s, i], [kd.hitsuchu[s], j]])
+                
+    meishiki.update({"hitsuchu": hitsuchu})
+    
     
 def show_age(birthday, sex, t_flag):
 
@@ -635,6 +655,18 @@ def show_additional_info(birthday, t_flag):
             b2 = kd.shigo_chu[s[1][1]]   # 支２の場所
             k2 = kd.shi[s[1][0]]         # 支２
             print(b1 + 'の「' + k1 + '」が、' + b2 + 'の「' + k2 + '」と支合する')
+
+    print()
+    print('＜七冲＞')
+    if not meishiki["hitsuchu"]:
+        print('七冲なし')
+    else:
+        for h in meishiki["hitsuchu"]:
+            b1 = kd.shigo_chu[h[0][1]]   # 支１の場所
+            k1 = kd.shi[h[0][0]]         # 支１
+            b2 = kd.shigo_chu[h[1][1]]   # 支２の場所
+            k2 = kd.shi[h[1][0]]         # 支２
+            print(b1 + 'の「' + k1 + '」と、' + b2 + 'の「' + k2 + '」とが冲する')
             
     
     
@@ -660,6 +692,7 @@ if __name__ == '__main__':
     append_getsurei(birthday)
     append_kango()
     append_shigo()
+    append_hitsuchu()
     
     # 生年月日・性別を出力する
     show_age(birthday, sex, t_flag)
@@ -669,5 +702,3 @@ if __name__ == '__main__':
     show_daiun_nenun(birthday)
 
     show_additional_info(birthday, t_flag)
-    
-    print(meishiki)
