@@ -431,7 +431,6 @@ def append_getsurei(birthday):
     #   - birthday（datetime）：生年月日
     # ＜出力＞
     #   - kd.getsurei に対応する番号
-
     
     shi_ = kd.shi[birthday.month]  # 生まれ月の地支を引く（節入りを考慮している？？？）
     getsurei_ = kd.getsurei_table[meishiki["nitchu_tenkan"]]
@@ -446,10 +445,35 @@ def append_getsurei(birthday):
             break
 
     meishiki.update({"getsurei": idx1})
+
+
+def append_kango():
+
+    # ＜機能＞
+    # 干合を命式に追加する
+    # ＜入力＞
+    # なし
+    # ＜出力＞
+    #   - 干合のリスト
+    #     [[干合する干１, 干１の場所（0〜7）], [干合する干２, 干２の場所], 変化する五行]
+    
+    tenkan_zokan = meishiki["tenkan"] + meishiki["zokan"]
+    
+    kango = []
+    for i, tz1 in enumerate(tenkan_zokan):
+        if tz1 == -1:
+            continue
+        for j in list(range(i, len(tenkan_zokan))):
+            if kd.kango[tz1] == tenkan_zokan[j] and i != j:
+                kango.append([[tz1, i], [tenkan_zokan[j], j], kd.kango_henka[tz1]])
+
+    meishiki.update({"kango": kango})
     
 
 def show_age(birthday, sex, t_flag):
 
+    # 生年月日・年齢・性別などの基本情報を出力する
+    
     if sex == 0:
         sex_str = '男命'
     else:
@@ -514,7 +538,7 @@ def show_meishiki(t_flag):
               '| ' + zokan[1] + '（' + zokan_tsuhen[1] + '） ' +
               '| ' + zokan[0] + '（' + zokan_tsuhen[0] + '） ' +
               '|')        
-
+        
 
 def show_daiun_nenun(birthday):
 
@@ -559,7 +583,28 @@ def show_daiun_nenun(birthday):
             print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' |' + '                ' + ' | ' + u)
         year += 1
     
-        
+
+def show_additional_info(birthday, t_flag):
+
+    print()
+    print('＜月令＞')
+    print(kd.getsurei[meishiki["getsurei"]])
+
+    print()
+    print('＜干合＞')
+    if not meishiki["kango"]:
+        print('干合なし')
+    else:
+        for k in meishiki["kango"]:
+            b1 = kd.kango_chu[k[0][1]]   # 干１の場所
+            k1 = kd.kan[k[0][0]]         # 干１
+            b2 = kd.kango_chu[k[1][1]]   # 干２の場所
+            k2 = kd.kan[k[1][0]]         # 干２
+            g  = kd.gogyo[k[2]]
+            print(b1 + 'の「' + k1 + '」が、' + b2 + 'の「' + k2 + '」と干合して「' + g + '」に五行変化')
+    
+    
+    
 if __name__ == '__main__':
 
     # 起動時の引数から生年月日・性別などのデータを構築する
@@ -579,6 +624,7 @@ if __name__ == '__main__':
     append_nenun(birthday)
     
     append_getsurei(birthday)
+    append_kango()
     
     # 生年月日・性別を出力する
     show_age(birthday, sex, t_flag)
@@ -587,3 +633,6 @@ if __name__ == '__main__':
     show_meishiki(t_flag)
     show_daiun_nenun(birthday)
 
+    show_additional_info(birthday, t_flag)
+    
+    print(meishiki)
