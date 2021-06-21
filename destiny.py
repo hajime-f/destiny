@@ -246,7 +246,10 @@ def append_kanshi(birthday, t_flag):
 
 
 def find_tsuhen(s_kan, kan_):
-    return kd.kan_tsuhen[s_kan].index(kan_)
+    try:
+        return kd.kan_tsuhen[s_kan].index(kan_)
+    except:
+        return -1
 
     
 def find_tsuhen__list(s_kan, kan_list):
@@ -272,7 +275,10 @@ def append_tsuhen():
 
 
 def find_twelve_fortune(s_shi, shi_):
-    return kd.twelve_table[s_shi][shi_]
+    try:
+        return kd.twelve_table[s_shi][shi_]
+    except:
+        return -1
 
 
 def find_twelve_fortune__list(s_shi, shi_list):
@@ -293,21 +299,6 @@ def append_twelve_fortune():
     sl = find_twelve_fortune__list(meishiki["nitchu_tenkan"], meishiki["chishi"])
     meishiki.update({"twelve_fortune": sl})
 
-
-def append_additional_info():
-
-    # ＜機能＞
-    # 命式に通変と十二運を追加する
-    # ＜入力＞
-    # なし
-    # ＜出力＞
-    #   - グローバル変数 meishiki に下記の情報を追加する
-    #     - tenkan_tsuhen（list）：天干の通変の番号
-    #     - zokan_tsuhen（list）：蔵干の通変の番号
-    #     - twelve_fortune（list）：地支の十二運
-    append_tsuhen()
-    append_twelve_fortune()
-    
 
 def convert_year_ratio(birthday):
 
@@ -448,7 +439,7 @@ def show_age(birthday, sex, t_flag):
         print(str(birthday.year) + '年（' + wareki + '）' + str(birthday.month) + '月' + str(birthday.day) + '日生（時刻不明） ' + sex_str)
 
 
-def show_meishiki():
+def show_meishiki(t_flag):
 
     # 命式を整形して出力する
     
@@ -462,23 +453,42 @@ def show_meishiki():
     print()
     print('|   生  時   |   生  日   |   生  月   |   生  年   |')    
     print('+============+============+============+============+')   # 56文字
-    print('| ' + tenkan[3] + '（' + tenkan_tsuhen[3] + '） ' +
-          '|     ' + tenkan[2] +
-          '     | ' + tenkan[1] + '（' + tenkan_tsuhen[1] + '） ' +
-          '| ' + tenkan[0] + '（' + tenkan_tsuhen[0] + '）' +
-          ' |')
-    print('+------------+------------+------------+------------+')
-    print('|  ' + chishi[3] + '（' + twelve_fortune[3] + '）  ' +
-          '|  ' + chishi[2] + '（' + twelve_fortune[2] + '）  ' +
-          '|  ' + chishi[1] + '（' + twelve_fortune[1] + '）  ' +
-          '|  ' + chishi[0] + '（' + twelve_fortune[0] + '）  ' +
-          '|')
-    print('+------------+------------+------------+------------+')
-    print('| ' + zokan[3] + '（' + zokan_tsuhen[3] + '） ' +
-          '| ' + zokan[2] + '（' + zokan_tsuhen[2] + '） ' +
-          '| ' + zokan[1] + '（' + zokan_tsuhen[1] + '） ' +
-          '| ' + zokan[0] + '（' + zokan_tsuhen[0] + '） ' +
-          '|')
+    if t_flag:
+        print('| ' + tenkan[3] + '（' + tenkan_tsuhen[3] + '） ' +
+              '|     ' + tenkan[2] +
+              '     | ' + tenkan[1] + '（' + tenkan_tsuhen[1] + '） ' +
+              '| ' + tenkan[0] + '（' + tenkan_tsuhen[0] + '）' +
+              ' |')
+        print('+------------+------------+------------+------------+')
+        print('|  ' + chishi[3] + '（' + twelve_fortune[3] + '）  ' +
+              '|  ' + chishi[2] + '（' + twelve_fortune[2] + '）  ' +
+              '|  ' + chishi[1] + '（' + twelve_fortune[1] + '）  ' +
+              '|  ' + chishi[0] + '（' + twelve_fortune[0] + '）  ' +
+              '|')
+        print('+------------+------------+------------+------------+')
+        print('| ' + zokan[3] + '（' + zokan_tsuhen[3] + '） ' +
+              '| ' + zokan[2] + '（' + zokan_tsuhen[2] + '） ' +
+              '| ' + zokan[1] + '（' + zokan_tsuhen[1] + '） ' +
+              '| ' + zokan[0] + '（' + zokan_tsuhen[0] + '） ' +
+              '|')
+    else:
+        print('|    ----    ' +
+              '|     ' + tenkan[2] +
+              '     | ' + tenkan[1] + '（' + tenkan_tsuhen[1] + '） ' +
+              '| ' + tenkan[0] + '（' + tenkan_tsuhen[0] + '）' +
+              ' |')
+        print('+------------+------------+------------+------------+')
+        print('|    ----    ' +
+              '|  ' + chishi[2] + '（' + twelve_fortune[2] + '）  ' +
+              '|  ' + chishi[1] + '（' + twelve_fortune[1] + '）  ' +
+              '|  ' + chishi[0] + '（' + twelve_fortune[0] + '）  ' +
+              '|')
+        print('+------------+------------+------------+------------+')
+        print('|    ----    ' +
+              '| ' + zokan[2] + '（' + zokan_tsuhen[2] + '） ' +
+              '| ' + zokan[1] + '（' + zokan_tsuhen[1] + '） ' +
+              '| ' + zokan[0] + '（' + zokan_tsuhen[0] + '） ' +
+              '|')        
 
 
 def show_daiun_nenun(birthday):
@@ -534,7 +544,8 @@ if __name__ == '__main__':
     append_kanshi(birthday, t_flag)
 
     # 命式に通変と十二運を追加する
-    append_additional_info()
+    append_tsuhen()
+    append_twelve_fortune()
 
     # 命式に大運を追加する
     append_daiun(birthday, sex)
@@ -546,5 +557,5 @@ if __name__ == '__main__':
     show_age(birthday, sex, t_flag)
 
     # 命式を出力する
-    show_meishiki()
+    show_meishiki(t_flag)
     show_daiun_nenun(birthday)
