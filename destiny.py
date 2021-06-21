@@ -245,13 +245,17 @@ def append_kanshi(birthday, t_flag):
     meishiki.update({"getchu_zokan": m_zkan})
 
 
-def find_tsuhen(s_kan, kan_list):
+def find_tsuhen(s_kan, kan_):
+    return kd.kan_tsuhen[s_kan].index(kan_)
+
+    
+def find_tsuhen__list(s_kan, kan_list):
 
     # s_kan に対する kan_list の通変をそれぞれ取得する
     
     kl = []
     for kan_ in kan_list:
-        kl.append(kd.kan_tsuhen[s_kan].index(kan_))
+        kl.append(find_tsuhen(s_kan, kan_))
         
     return kl
 
@@ -260,14 +264,18 @@ def append_tsuhen():
 
     # 命式に通変を追加する
     
-    kl1 = find_tsuhen(meishiki["nitchu_tenkan"], meishiki["tenkan"])
+    kl1 = find_tsuhen__list(meishiki["nitchu_tenkan"], meishiki["tenkan"])
     meishiki.update({"tenkan_tsuhen": kl1})
     
-    kl2 = find_tsuhen(meishiki["nitchu_tenkan"], meishiki["zokan"])
+    kl2 = find_tsuhen__list(meishiki["nitchu_tenkan"], meishiki["zokan"])
     meishiki.update({"zokan_tsuhen": kl2})
 
 
-def find_twelve_fortune(s_shi, shi_list):
+def find_twelve_fortune(s_shi, shi_):
+    return kd.twelve_table[s_shi][shi_]
+
+
+def find_twelve_fortune__list(s_shi, shi_list):
 
     # s_shi に対する shi_list の十二運をそれぞれ取得する
 
@@ -282,7 +290,7 @@ def append_twelve_fortune():
 
     # 命式に十二運を追加する
 
-    sl = find_twelve_fortune(meishiki["nitchu_tenkan"], meishiki["chishi"])
+    sl = find_twelve_fortune__list(meishiki["nitchu_tenkan"], meishiki["chishi"])
     meishiki.update({"twelve_fortune": sl})
 
 
@@ -390,8 +398,8 @@ def append_daiun(birthday, sex):
     daiun = []
     for n in list(range(10, 140, 10)):
         kanshi_ = kd.sixty_kanshi[idx]
-        tsuhen_ = kd.kan_tsuhen[meishiki["nitchu_tenkan"]].index(kanshi_[0])
-        t_fortune_ = kd.twelve_table[meishiki["nitchu_tenkan"]][kanshi_[1]]
+        tsuhen_ = find_tsuhen(meishiki["nitchu_tenkan"], kanshi_[0])
+        t_fortune_ = find_twelve_fortune(meishiki["nitchu_tenkan"], kanshi_[1])
         daiun.append([ry, kanshi_[0], kanshi_[1], tsuhen_, t_fortune_])
         ry += 10
         idx += p
@@ -414,14 +422,14 @@ def append_nenun(birthday):
     nenun = []
     for n in list(range(0, 120)):
         kanshi_ = kd.sixty_kanshi[idx]
-        tsuhen_ = kd.kan_tsuhen[meishiki["nitchu_tenkan"]].index(kanshi_[0])
-        t_fortune_ = kd.twelve_table[meishiki["nitchu_tenkan"]][kanshi_[1]]
+        tsuhen_ = find_tsuhen(meishiki["nitchu_tenkan"], kanshi_[0])
+        t_fortune_ = find_twelve_fortune(meishiki["nitchu_tenkan"], kanshi_[1])
         nenun.append([n, kanshi_[0], kanshi_[1], tsuhen_, t_fortune_])
         idx += 1
         if idx >= 60:
             idx = 0
 
-    meishiki.update({"nenum": nenun})
+    meishiki.update({"nenun": nenun})
     
 
 def show_age(birthday, sex, t_flag):
@@ -440,7 +448,7 @@ def show_age(birthday, sex, t_flag):
         print(str(birthday.year) + '年（' + wareki + '）' + str(birthday.month) + '月' + str(birthday.day) + '日生（時刻不明） ' + sex_str)
 
 
-def show_meishiki(meishiki):
+def show_meishiki():
 
     # 命式を整形して出力する
     
@@ -471,6 +479,50 @@ def show_meishiki(meishiki):
           '| ' + zokan[1] + '（' + zokan_tsuhen[1] + '） ' +
           '| ' + zokan[0] + '（' + zokan_tsuhen[0] + '） ' +
           '|')
+
+
+def show_daiun_nenun(birthday):
+
+    year = birthday.year
+    m = 0
+    flag = False
+
+    print()
+    print()
+    print('        '+ '年' + '        | ' + '年齢' + '  |      ' + '大運' + '       |      ' + '年運')
+    print('------------------+-------+-----------------+------------------')
+    
+    for n, nenun in enumerate(meishiki["nenun"]):
+
+        n_kan = kd.kan[nenun[1]]
+        n_shi = kd.shi[nenun[2]]
+        n_tsuhen = kd.tsuhen[nenun[3]]
+        n_twelve_fortune = kd.twelve_fortune[nenun[4]]
+        
+        u = ''.join([n_kan, n_shi]) + ' (' + n_tsuhen + '・' + n_twelve_fortune + ')'
+        wareki = kd.convert_to_wareki(dt(year=year, month=birthday.month, day=birthday.day))
+        
+        if len(str(n)) == 1:
+            age = '  ' + str(n)
+        elif len(str(n)) == 2:
+            age = ' ' + str(n)
+        else:
+            age = str(n)
+        
+        daiun = meishiki["daiun"][m]
+        d_kan = kd.kan[daiun[1]]
+        d_shi = kd.shi[daiun[2]]
+        d_tsuhen = kd.tsuhen[daiun[3]]
+        d_twelve_fortune = kd.twelve_fortune[daiun[4]]
+
+        if n == daiun[0]:
+            d_un_ = ''.join([d_kan, d_shi]) + ' (' + d_tsuhen + '・' + d_twelve_fortune + ')'
+            print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' | '+ d_un_ + ' | ' + u)
+            print('------------------+-------+-----------------+------------------')
+            m += 1
+        else:
+            print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' |' + '                ' + ' | ' + u)
+        year += 1
     
         
 if __name__ == '__main__':
@@ -494,5 +546,5 @@ if __name__ == '__main__':
     show_age(birthday, sex, t_flag)
 
     # 命式を出力する
-    show_meishiki(meishiki)
-    print(meishiki)
+    show_meishiki()
+    show_daiun_nenun(birthday)
