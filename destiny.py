@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import kanshi_data as kd
-import sys
+import sys, itertools
 from datetime import datetime as dt
 from datetime import timedelta as td
 
@@ -287,7 +287,7 @@ def find_twelve_fortune__list(s_shi, shi_list):
 
     sl = []
     for shi_ in shi_list:
-        sl.append(kd.twelve_table[s_shi][shi_])
+        sl.append(find_twelve_fortune(s_shi, shi_))
 
     return sl
 
@@ -495,6 +495,13 @@ def append_shigo():
 
 def append_hogo():
 
+    # ＜機能＞
+    # 方合を命式に追加する
+    # ＜入力＞
+    #   なし
+    # ＜出力＞
+    #   - 方合する地支のリスト
+    
     hogo = False
     chishi = meishiki["chishi"]
     for i, h in enumerate(kd.hogo):
@@ -528,6 +535,31 @@ def append_hitsuchu():
                 hitsuchu.append([[s, i], [kd.hitsuchu[s], j]])
                 
     meishiki.update({"hitsuchu": hitsuchu})
+
+
+def append_kei():
+
+    # ＜機能＞
+    # 刑を命式に追加する
+    # ＜入力＞
+    #   なし
+    # ＜出力＞
+    #   - 刑のリスト
+    
+    chishi = meishiki["chishi"]
+
+    kei = []
+    for i, s in enumerate(chishi):
+        if s == -1:
+            continue
+        for j in list(range(0, len(chishi))):
+            if kd.kei[s] == chishi[j] and i != j:
+                kei.append([[s, i], [kd.kei[s], j]])
+                
+    meishiki.update({"kei": kei})
+
+        
+    
     
     
 def show_age(birthday, sex, t_flag):
@@ -673,7 +705,7 @@ def show_additional_info(birthday, t_flag):
             k1 = kd.shi[s[0][0]]         # 支１
             b2 = kd.shigo_chu[s[1][1]]   # 支２の場所
             k2 = kd.shi[s[1][0]]         # 支２
-            print(b1 + 'の「' + k1 + '」が、' + b2 + 'の「' + k2 + '」と支合する')
+            print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが支合する')
 
     print()
     print('＜方合＞')
@@ -692,8 +724,19 @@ def show_additional_info(birthday, t_flag):
             k1 = kd.shi[h[0][0]]         # 支１
             b2 = kd.shigo_chu[h[1][1]]   # 支２の場所
             k2 = kd.shi[h[1][0]]         # 支２
-            print(b1 + 'の「' + k1 + '」と、' + b2 + 'の「' + k2 + '」とが冲する')            
+            print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが冲する')            
     
+    print()
+    print('＜刑＞')
+    if not meishiki["kei"]:
+        print('刑なし')
+    else:
+        for k in meishiki["kei"]:
+            b1 = kd.shigo_chu[k[0][1]]   # 支１の場所
+            k1 = kd.shi[k[0][0]]         # 支１
+            b2 = kd.shigo_chu[k[1][1]]   # 支２の場所
+            k2 = kd.shi[k[1][0]]         # 支２
+            print(b1 + 'の「' + k1 + '」が、' + b2 + 'の「' + k2 + '」を刑する')
     
     
 if __name__ == '__main__':
@@ -719,6 +762,7 @@ if __name__ == '__main__':
     append_shigo()
     append_hogo()
     append_hitsuchu()
+    append_kei()
     
     # 生年月日・性別を出力する
     show_age(birthday, sex, t_flag)
