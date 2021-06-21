@@ -7,6 +7,12 @@ from datetime import timedelta as td
 
 meishiki = {}
 
+
+def debug__show_list(conv_list, p_list):
+    
+    print([conv_list[s] for s in p_list])
+
+
 def build_birthday_data():
 
     # 起動時の引数から生年月日・性別などのデータを構築する
@@ -274,20 +280,22 @@ def append_tsuhen():
     meishiki.update({"zokan_tsuhen": kl2})
 
 
-def find_twelve_fortune(s_shi, shi_):
+def find_twelve_fortune(nitkan, shi_):
+
     try:
-        return kd.twelve_table[s_shi][shi_]
+        return kd.twelve_table[nitkan][shi_]
     except:
         return -1
+    
 
 
-def find_twelve_fortune__list(s_shi, shi_list):
+def find_twelve_fortune__list(nitkan, shi_list):
 
     # s_shi に対する shi_list の十二運をそれぞれ取得する
-
+    
     sl = []
     for shi_ in shi_list:
-        sl.append(find_twelve_fortune(s_shi, shi_))
+        sl.append(find_twelve_fortune(nitkan, shi_))
 
     return sl
 
