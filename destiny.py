@@ -566,7 +566,27 @@ def append_kei():
                 
     meishiki.update({"kei": kei})
 
-        
+
+def append_gai():
+
+    # ＜機能＞
+    # 害を命式に追加する
+    # ＜入力＞
+    #   なし
+    # ＜出力＞
+    #   - 害のリスト
+    
+    chishi = meishiki["chishi"]
+
+    gai = []
+    for i, s in enumerate(chishi):
+        if s == -1:
+            continue
+        for j in list(range(i, len(chishi))):
+            if kd.gai[s] == chishi[j] and i != j:
+                gai.append([[s, i], [kd.gai[s], j]])
+                
+    meishiki.update({"gai": gai})
     
     
     
@@ -746,7 +766,19 @@ def show_additional_info(birthday, t_flag):
             k2 = kd.shi[k[1][0]]         # 支２
             print(b1 + 'の「' + k1 + '」が、' + b2 + 'の「' + k2 + '」を刑する')
     
-    
+    print()
+    print('＜害＞')
+    if not meishiki["gai"]:
+        print('害なし')
+    else:
+        for g in meishiki["gai"]:
+            b1 = kd.shigo_chu[g[0][1]]   # 支１の場所
+            k1 = kd.shi[g[0][0]]         # 支１
+            b2 = kd.shigo_chu[g[1][1]]   # 支２の場所
+            k2 = kd.shi[g[1][0]]         # 支２
+            print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが害する')
+
+            
 if __name__ == '__main__':
 
     # 起動時の引数から生年月日・性別などのデータを構築する
@@ -771,6 +803,7 @@ if __name__ == '__main__':
     append_hogo()
     append_hitsuchu()
     append_kei()
+    append_gai()
     
     # 生年月日・性別を出力する
     show_age(birthday, sex, t_flag)
