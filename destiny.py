@@ -5,6 +5,7 @@ import sys, itertools
 from datetime import datetime as dt
 from datetime import timedelta as td
 
+# 命式の情報を格納するグローバル変数
 meishiki = {}
 
 
@@ -589,6 +590,34 @@ def append_gai():
     meishiki.update({"gai": gai})
 
 
+def append_kubo(birthday):
+
+    # ＜機能＞
+    # 空亡を命式に追加する
+    # ＜入力＞
+    #   - birthday（datetime）：生年月日
+    # ＜出力＞
+    #   - kubo（list）：空亡となる地支の番号と位置
+
+    d = birthday.day + kd.kisu_table[birthday.year - 1926][birthday.month - 1] - 1
+    if d >= 60:
+        d -= 60  # d が 60 を超えたら 60 を引く
+    
+    try:
+        kubo = kd.kubo[d // 10]
+    except:
+        print('空亡が計算できませんでした。')
+        exit()
+    
+    chishi = meishiki["chishi"]
+    k = []
+    for i, c in enumerate(chishi):
+        if c in kubo:
+            k.append([c, i])
+
+    meishiki.update({"kubo": k})
+    
+
 # def is_kakikaku(kango, month_shi):
 
 #     henkaku = ''
@@ -665,6 +694,7 @@ def append_additional_info(birthday):
     append_hitsuchu()           # 七冲を追加
     append_kei()                # 刑を追加
     append_gai()                # 害を追加
+    append_kubo(birthday)
     
 
 def show_age(birthday, sex, t_flag):
@@ -695,6 +725,7 @@ def show_meishiki(t_flag):
     twelve_fortune = [kd.twelve_fortune[i] for i in meishiki["twelve_fortune"]]
     zokan = [kd.kan[i] for i in meishiki["zokan"]]
     zokan_tsuhen = [kd.tsuhen[i] for i in meishiki["zokan_tsuhen"]]
+    kubo = meishiki["kubo"]
 
     print()
     print('|   生  時   |   生  日   |   生  月   |   生  年   |')    
@@ -855,6 +886,16 @@ def show_additional_info(birthday, t_flag):
             k2 = kd.shi[g[1][0]]         # 支２
             print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが害する')
 
+    print()
+    print('＜空亡＞')
+    if not meishiki["kubo"]:
+        print('空亡なし')
+    else:
+        for k in meishiki["kubo"]:
+            b1 = kd.shigo_chu[k[1]]
+            k1 = kd.shi[k[0]]
+            print(b1 + 'の「' + k1 + '」が空亡')
+
             
 if __name__ == '__main__':
 
@@ -882,5 +923,5 @@ if __name__ == '__main__':
 
     # 命式を出力する
     show_meishiki(t_flag)
-    show_daiun_nenun(birthday)
+    # show_daiun_nenun(birthday)
     show_additional_info(birthday, t_flag)
