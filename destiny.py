@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import kanshi_data as kd
-import sys, itertools
+import sys
 from datetime import datetime as dt
 from datetime import timedelta as td
 
 # 命式の情報を格納するグローバル変数
 meishiki = {}
-
 
 def debug__show_list(conv_list, p_list):
     
@@ -270,15 +269,17 @@ def find_tsuhen__list(s_kan, kan_list):
     return kl
 
 
-def append_tsuhen():
+def append_tsuhen(std, key1, key2):
 
     # 命式に通変を追加する
+    # std は通変の基準となる干（その干 std に対する通変を出す）
+    # key は辞書のキー名
     
-    kl1 = find_tsuhen__list(meishiki["nitchu_tenkan"], meishiki["tenkan"])
-    meishiki.update({"tenkan_tsuhen": kl1})
+    kl1 = find_tsuhen__list(meishiki[std], meishiki["tenkan"])
+    meishiki.update({key1: kl1})
     
-    kl2 = find_tsuhen__list(meishiki["nitchu_tenkan"], meishiki["zokan"])
-    meishiki.update({"zokan_tsuhen": kl2})
+    kl2 = find_tsuhen__list(meishiki[std], meishiki["zokan"])
+    meishiki.update({key2: kl2})
 
 
 def find_twelve_fortune(nitkan, shi_):
@@ -301,12 +302,12 @@ def find_twelve_fortune__list(nitkan, shi_list):
     return sl
 
 
-def append_twelve_fortune():
+def append_twelve_fortune(std, key):
 
     # 命式に十二運を追加する
 
-    sl = find_twelve_fortune__list(meishiki["nitchu_tenkan"], meishiki["chishi"])
-    meishiki.update({"twelve_fortune": sl})
+    sl = find_twelve_fortune__list(meishiki[std], meishiki["chishi"])
+    meishiki.update({key: sl})
 
 
 def convert_year_ratio(birthday):
@@ -694,7 +695,7 @@ def append_additional_info(birthday):
     append_hitsuchu()           # 七冲を追加
     append_kei()                # 刑を追加
     append_gai()                # 害を追加
-    append_kubo(birthday)
+    append_kubo(birthday)       # 空亡を追加
     
 
 def show_age(birthday, sex, t_flag):
@@ -841,14 +842,14 @@ def show_additional_info(birthday, t_flag):
             k1 = kd.shi[s[0][0]]         # 支１
             b2 = kd.shigo_chu[s[1][1]]   # 支２の場所
             k2 = kd.shi[s[1][0]]         # 支２
-            print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが支合する')
+            print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが支合')
 
     print()
     print('＜方合＞')
     if not meishiki["hogo"]:
         print('方合なし')
     else:
-        print(meishiki["hogo"][0] + ', ' + meishiki["hogo"][1] + ', ' + meishiki["hogo"][2] + 'で方合する')
+        print(meishiki["hogo"][0] + ', ' + meishiki["hogo"][1] + ', ' + meishiki["hogo"][2] + 'で方合')
     
     print()
     print('＜七冲＞')
@@ -860,7 +861,7 @@ def show_additional_info(birthday, t_flag):
             k1 = kd.shi[h[0][0]]         # 支１
             b2 = kd.shigo_chu[h[1][1]]   # 支２の場所
             k2 = kd.shi[h[1][0]]         # 支２
-            print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが冲する')            
+            print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが冲')
     
     print()
     print('＜刑＞')
@@ -906,8 +907,8 @@ if __name__ == '__main__':
     append_kanshi(birthday, t_flag)
 
     # 命式に通変と十二運を追加する
-    append_tsuhen()
-    append_twelve_fortune()
+    append_tsuhen("nitchu_tenkan", "tenkan_tsuhen", "zokan_tsuhen")
+    append_twelve_fortune("nitchu_tenkan", "twelve_fortune")
 
     # 命式に大運を追加する
     append_daiun(birthday, sex)
