@@ -6,7 +6,7 @@ class Meishiki:
 
     meishiki = {}
     birthday = dt.now()
-    sex = 0
+    sex = -1
     t_flag = False
 
     def __init__(self, args):
@@ -290,7 +290,7 @@ class Meishiki:
         self.meishiki.update({"twelve_fortune": f})
 
 
-    def append_getsurei(self):
+    def append_getsurei(self, std_num):
         
         # ＜機能＞
         # 月令の旺衰強弱を命式に追加する
@@ -298,9 +298,12 @@ class Meishiki:
         #   - self.birthday（datetime）：生年月日
         # ＜出力＞
         #   - kd.getsurei に対応する番号
+
+        kan = self.meishiki["tenkan"] + self.meishiki["zokan"]
+        std = kan[std_num]
         
         shi_ = kd.shi[self.birthday.month]  # 生まれ月の地支を引く（節入りを考慮している？？？）
-        getsurei_ = kd.getsurei_table[self.meishiki["nitchu_tenkan"]]
+        getsurei_ = kd.getsurei_table[std]
         
         p = False
         for idx1, gr_ in enumerate(getsurei_):
@@ -476,11 +479,11 @@ class Meishiki:
         self.meishiki.update({"kubo": k})
 
 
-    def append_additional_info(self):
+    def append_additional_info(self, std_num):
         
         # 命式にその他の情報を追加する
         
-        self.append_getsurei()   # 月令を追加
+        self.append_getsurei(std_num)   # 月令を追加
         self.append_kango()      # 干合を追加
         self.append_shigo()      # 支合を追加
         self.append_hogo()       # 方合を追加
