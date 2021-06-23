@@ -4,10 +4,12 @@ from datetime import timedelta as td
 
 class Meishiki:
 
-    meishiki = {}
-    birthday = dt.now()
-    sex = -1
-    t_flag = False
+    meishiki = None
+    birthday = None
+    sex = None
+    t_flag = None
+
+    kan_score = 0
 
     def __init__(self, args):
         
@@ -225,6 +227,7 @@ class Meishiki:
         jichu  = [t_kan, t_shi, t_zkan]
         
         # クラス変数 meishiki に情報を追加していく
+        self.meishiki = {}
         self.meishiki.update({"tenkan": tenkan})
         self.meishiki.update({"chishi": chishi})
         self.meishiki.update({"zokan" : zokan})

@@ -14,6 +14,18 @@ if __name__ == '__main__':
     meishiki1.append_twelve_fortune(2)
     meishiki1.append_additional_info(2)
 
+    meishiki1.show_basic_info()
+
+    # 命式を整形して出力する
+    meishiki1.show_meishiki()
+    meishiki1.show_additional_info()
+
+    # 鑑定する
+    analysis = Analysis(sys.argv)
+
+    analysis.scoring_kan(meishiki1)
+    print(meishiki1.kan_score)
+    
     # 命式を作る（用神）
     meishiki2 = Meishiki(sys.argv)
     meishiki2.build_meishiki()
@@ -22,18 +34,18 @@ if __name__ == '__main__':
     meishiki2.append_additional_info(3)
     
     # 命式を整形して出力する
-    meishiki1.show_basic_info()
-    meishiki1.show_meishiki()
-    meishiki1.show_additional_info()
+    meishiki2.show_meishiki()
+    meishiki2.show_additional_info()
 
+    analysis.scoring_kan(meishiki2)
+    print(meishiki2.kan_score)
+
+    
     # 運勢（大運・年運）を作る
     unsei = Unsei(meishiki1)
     unsei.append_daiun()
     unsei.append_nenun()
 
-    # 鑑定する
-    analysis = Analysis(meishiki1, meishiki2, unsei)
-    
     # 運勢を整形して出力する
     # unsei.show_daiun_nenun()
     
