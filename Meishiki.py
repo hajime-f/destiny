@@ -242,6 +242,8 @@ class Meishiki:
         self.meishiki.update({"nitchu": nitchu})
         self.meishiki.update({"jichu" : jichu})
         self.meishiki.update({"nitchu_tenkan": d_kan})
+        self.meishiki.update({"getchu_chishi": m_shi})
+        self.meishiki.update({"getchu_zokan": m_zkan})
 
 
     def find_tsuhen(self, s_kan, kan_):
@@ -511,6 +513,21 @@ class Meishiki:
         self.meishiki.update({"sango": sango})
 
 
+    def append_hankai(self):
+
+        # 半会の有無を判定し、命式に追加する
+        # [[支１, 支２], 足りない支, 五行, 変化した後の干]
+        
+        chishi = self.meishiki["chishi"]
+
+        hankai = []
+        for h in kd.hankai:
+            if (h[0][0] in chishi) and (h[0][1] in chishi):
+                hankai.append(h)
+                
+        self.meishiki.update({"hankai": hankai})
+        
+
     def append_additional_info(self, std_num):
         
         # 命式にその他の情報を追加する
@@ -524,6 +541,7 @@ class Meishiki:
         self.append_kei()        # 刑を追加
         self.append_gai()        # 害を追加
         self.append_kubo()       # 空亡を追加
+        self.append_hankai()     # 半会を追加
 
     def find_kan(num):
         kan = self.meishiki["tenkan"] + self.meishiki["zokan"]
@@ -692,7 +710,14 @@ class Meishiki:
             sango = self.meishiki["sango"]
             print(kd.shi[sango[0][0]] + ', ' + kd.shi[sango[0][1]] + ', ' + kd.shi[sango[0][2]] + 'の三合' + kd.gogyo[sango[1]]+ '局により、月支蔵干が' + kd.kan[sango[3]] + '（' + kd.tsuhen[sango[4]] + '）から' + kd.kan[sango[2]] + '（' + kd.tsuhen[sango[5]] +'）に変化する')
 
-
+        print()
+        print('＜半会＞')
+        if not self.meishiki["hankai"]:
+            print('半会なし')
+        else:
+            hankai = self.meishiki["hankai"]
+            for h in hankai:
+                print(kd.shi[h[0][0]] + ', ' + kd.shi[h[0][1]] + 'が' + kd.gogyo[h[2]] + '局半会')
 
 
 # def is_kakikaku(kango, month_shi):
@@ -717,44 +742,3 @@ class Meishiki:
 #         henkaku = '化気格なし'
 
 #     return henkaku
-
-
-# def is_sango(shi, day_kan):
-
-#     sango_ = []
-#     sango_flag = False
-    
-#     for s in kd.sango:
-#         for v in itertools.permutations(list(range(0,len(shi))), 3):
-#             if [shi[v[0]], shi[v[1]], shi[v[2]]] == s[0]:
-#                 sango_.append([shi[v[0]], shi[v[1]], shi[v[2]]])
-#                 shi_ = s[1]
-#                 kan_ = s[2]
-#                 sango_flag = True
-#                 break
-#         if sango_flag == True:
-#             break
-
-#     if not sango_:
-#         return sango_
-#     elif shi[2] in sango_[0]:
-#         sango_.append(shi_)
-#         sango_.append(kan_)
-#         sango_.append(lookup_tsuhen(day_kan, kan_))
-    
-#     return sango_
-
-# def disp_sango(sango):
-
-#     if not sango:
-#         print('三合なし')
-#         return True
-
-#     print('三合：')
-#     if len(sango) > 1:
-#         print(sango[0][0] + ', ' + sango[0][1] + ', ' + sango[0][2] + 'の三合' + sango[1] + '局により、月柱蔵干（用神）が' + sango[2] + '（' + sango[3] + '）に変化')
-#     else:
-#         print(sango[0][0] + ', ' + sango[0][1] + ', ' + sango[0][2] + 'の三合会局（用神変化なし）')
-        
-#     return True
-                

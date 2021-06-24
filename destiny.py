@@ -33,6 +33,7 @@ if __name__ == '__main__':
     meishiki2.append_twelve_fortune(5)
     meishiki2.append_additional_info(5)
     
+    
     # 命式を整形して出力する
     meishiki2.show_meishiki()
     meishiki2.show_additional_info()
