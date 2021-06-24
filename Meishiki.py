@@ -231,6 +231,13 @@ class Meishiki:
         getchu = [m_kan, m_shi, m_zkan]
         nitchu = [d_kan, d_shi, d_zkan]
         jichu  = [t_kan, t_shi, t_zkan]
+
+        # 五行（木火土金水）のそれぞれの数を得る
+        gogyo = [0] * 5
+        for t in tenkan:
+            gogyo[kd.gogyo_kan[t]] += 1
+        for s in chishi:
+            gogyo[kd.gogyo_shi[s]] += 1
         
         # クラス変数 meishiki に情報を追加していく
         self.meishiki = {}
@@ -241,9 +248,10 @@ class Meishiki:
         self.meishiki.update({"getchu": getchu})
         self.meishiki.update({"nitchu": nitchu})
         self.meishiki.update({"jichu" : jichu})
+        self.meishiki.update({"gogyo" : gogyo})
         self.meishiki.update({"nitchu_tenkan": d_kan})
         self.meishiki.update({"getchu_chishi": m_shi})
-        self.meishiki.update({"getchu_zokan": m_zkan})
+        self.meishiki.update({"getchu_zokan" : m_zkan})
 
 
     def find_tsuhen(self, s_kan, kan_):
@@ -619,6 +627,11 @@ class Meishiki:
 
 
     def show_additional_info(self):
+
+        print()
+        print('＜五行＞')
+        for i, g in enumerate(self.meishiki["gogyo"]):
+            print(kd.gogyo[i] + '：' + str(g))
         
         print()
         print('＜月令＞')
