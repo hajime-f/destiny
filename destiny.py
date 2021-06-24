@@ -30,6 +30,11 @@ if __name__ == '__main__':
     meishiki2.show_meishiki()
     meishiki2.show_additional_info(False)
 
+    # 運勢（大運・年運）を作る
+    unsei = Unsei(meishiki1)
+    unsei.append_daiun()
+    unsei.append_nenun()
+    
     # 鑑定する
     analysis = Analysis(sys.argv)
     
@@ -44,11 +49,6 @@ if __name__ == '__main__':
     analysis.evaluate_kan_interval(meishiki1, meishiki2)
     analysis.evaluate_analysis_type(meishiki1, meishiki2)
     
-    # 運勢（大運・年運）を作る
-    unsei = Unsei(meishiki1)
-    unsei.append_daiun()
-    unsei.append_nenun()
-
     # 運勢を整形して出力する
     # unsei.show_daiun_nenun()
     

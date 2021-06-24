@@ -24,36 +24,36 @@ class Analysis:
 
     # 十二運のスコア
     twelve_fortune_score = [
-        2,    # 長生
-        1,    # 沐浴
-        2,    # 冠帯
-        2,    # 建禄
-        2,    # 帝旺
+        0,    # 長生
+        0,    # 沐浴
+        1,    # 冠帯
+        1,    # 建禄
+        1,    # 帝旺
         0,    # 衰
-        0,    # 病
-        0,    # 死
-        1,    # 墓
-        0,    # 絶
-        1,    # 胎
-        1,    # 養
+        -1,    # 病
+        -1,    # 死
+        -1,    # 墓
+        -1,    # 絶
+        0,    # 胎
+        0,    # 養
     ]
 
     # 通変のスコア
     tsuhen_score = [
-        2,    # 比肩
-        2,    # 劫財
-        0,    # 食神
-        0,    # 傷官
-        0,    # 偏財
-        0,    # 正財
-        0,    # 偏官
-        0,    # 正官
+        1,    # 比肩
+        1,    # 劫財
+        -1,    # 食神
+        -1,    # 傷官
+        -1,    # 偏財
+        -1,    # 正財
+        -1,    # 偏官
+        -1,    # 正官
         1,    # 偏印
         1,    # 印綬
     ]
 
-    threshold = 10
-    diff_threshold = 5
+    threshold = 0
+    diff_threshold = 3
     
 
     def __init__(self, args):
@@ -151,16 +151,26 @@ class Analysis:
         # 日干・月支蔵干がともに小強以上の強さを持ち、
         # その強さは均衡が取れている場合
         if  (ms1.analysis["kan_strength"] and ms2.analysis["kan_strength"]) and ms1.analysis["kan_diff"]:
-
+            
             # (1) よい通変が用神格となっている場合
             if kd.tsuhen_gb[ms1.meishiki["tsuhen"][ms2.std_num]]:
                 pass
             
             # (2) 悪い通変が用神格となっている場合
-            else:
-                pass
-            
         else:
             pass
         
+        # (3) 両方とも小強以上の強さを持っているが、一方が強すぎてバランスが崩れている場合
+elif (ms1.analysis["kan_strength"] and ms2.analysis["kan_strength"]) and not ms1.analysis["kan_diff"]:
+    pass
+
+# (4) 日干が小強以上あるのに対し、用神格が小強に満たない場合
+elif ms1.analysis["kan_strength"] and not ms2.analysis["kan_strength"]:
+    pass
+
+# (5) 用神格が小強以上あるのに対し、日干が小強に満たない場合
+elif not ms1.analysis["kan_strength"] and ms2.analysis["kan_strength"]:
+
+else:
+    pass
         
