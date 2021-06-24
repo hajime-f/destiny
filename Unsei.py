@@ -31,7 +31,13 @@ class Unsei:
         for s in kd.setsuiri:
             p = self.meishiki.is_setsuiri(self.birthday.month)
             if (s[0] == self.birthday.year) and (s[1] == self.birthday.month):
-                previous_setsuiri =  dt(year = s[0], month = s[1] + p, day = s[2], hour = s[3], minute = s[4])
+                if s[1] + p <= 0:
+                    y = s[0] -1
+                    m = 12
+                else:
+                    y = s[0]
+                    m = s[1] + p
+                previous_setsuiri =  dt(year = y, month = m, day = s[2], hour = s[3], minute = s[4])
                 next_setsuiri = dt(year = s[0], month = s[1] + p + 1, day = s[2], hour = s[3], minute = s[4])
                 break
             

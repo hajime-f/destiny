@@ -29,9 +29,9 @@ if __name__ == '__main__':
     # 命式を作る（用神）
     meishiki2 = Meishiki(sys.argv)
     meishiki2.build_meishiki()
-    meishiki2.append_tsuhen(3)
-    meishiki2.append_twelve_fortune(3)
-    meishiki2.append_additional_info(3)
+    meishiki2.append_tsuhen(5)
+    meishiki2.append_twelve_fortune(5)
+    meishiki2.append_additional_info(5)
     
     # 命式を整形して出力する
     meishiki2.show_meishiki()

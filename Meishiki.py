@@ -24,7 +24,7 @@ class Meishiki:
             # サマータイムを考慮する
             if (dt(year=1948, month=5, day=2) <= self.birthday < dt(year=1951, month=9, day=8)) and (hour is not None):
                 self.birthday = dt(year = self.birthday.year, month = self.birthday.month, day = self.birthday.day,
-                              hour = self.birthday.hour - 1, minute = self.birthday.minute)
+                                   hour = self.birthday.hour - 1, minute = self.birthday.minute)
                 
         except IndexError:
             try:
@@ -150,7 +150,7 @@ class Meishiki:
             else:
                 to_dt = from_dt + td(hours = 1, minutes = 59)
                 
-            if from_dt <= self.birthday < to_dt:
+            if from_dt <= self.birthday <= to_dt:
                 try:
                     t_kan, t_shi = kd.time_kanshi[day_kan][i]
                     return t_kan, t_shi
@@ -177,7 +177,13 @@ class Meishiki:
         p = self.is_setsuiri(self.birthday.month)
         for s in kd.setsuiri:
             if (s[0] == self.birthday.year) and (s[1] == self.birthday.month):
-                setsuiri_ =  dt(year = s[0], month = s[1] + p, day = s[2], hour = s[3], minute = s[4])
+                if s[1] + p <= 0:
+                    y = s[0] - 1
+                    m = 12
+                else:
+                    y = s[0]
+                    m = s[1] + p
+                setsuiri_ =  dt(year = y, month = m, day = s[2], hour = s[3], minute = s[4])
                 
         delta = td(days = kd.zokan_time[shi][0], hours = kd.zokan_time[shi][1])
         
@@ -236,7 +242,7 @@ class Meishiki:
         self.meishiki.update({"nitchu": nitchu})
         self.meishiki.update({"jichu" : jichu})
         self.meishiki.update({"nitchu_tenkan": d_kan})
-        
+
 
     def find_tsuhen(self, s_kan, kan_):
         try:
@@ -482,10 +488,34 @@ class Meishiki:
         self.meishiki.update({"kubo": k})
 
 
+    def append_sango(self, std_num):
+
+        # ＜機能＞
+        # 三合会局の有無を判定し、あれば命式に追加する
+        # 追加されるのは、
+        # [[支１, 支２, 支３], 五行, 変化した後の干, 変化する前の干, 変化する前の干の通変, 変化した後の干の通変]
+        
+        chishi = self.meishiki["chishi"]
+
+        sango = []
+        for s in kd.sango:
+            if (s[0][0] in chishi) and (s[0][1] in chishi) and (s[0][2] in chishi):
+                sango = s + [self.meishiki["zokan"][1], self.meishiki["tsuhen"][5]]
+                self.meishiki["zokan"][1] = s[2]
+                self.meishiki["getchu"][2] = s[2]
+                self.append_tsuhen(std_num)
+                self.append_twelve_fortune(std_num)
+                sango += [self.meishiki["tsuhen"][5]]
+                break
+        
+        self.meishiki.update({"sango": sango})
+
+
     def append_additional_info(self, std_num):
         
         # 命式にその他の情報を追加する
         
+        self.append_sango(std_num)      # 三合会局を追加
         self.append_getsurei(std_num)   # 月令を追加
         self.append_kango()      # 干合を追加
         self.append_shigo()      # 支合を追加
@@ -654,6 +684,13 @@ class Meishiki:
                 k1 = kd.shi[k[0]]
                 print(b1 + 'の「' + k1 + '」が空亡')
 
+        print()
+        print('＜三合会局＞')
+        if not self.meishiki["sango"]:
+            print('三合会局なし')
+        else:
+            sango = self.meishiki["sango"]
+            print(kd.shi[sango[0][0]] + ', ' + kd.shi[sango[0][1]] + ', ' + kd.shi[sango[0][2]] + 'の三合' + kd.gogyo[sango[1]]+ '局により、月支蔵干が' + kd.kan[sango[3]] + '（' + kd.tsuhen[sango[4]] + '）から' + kd.kan[sango[2]] + '（' + kd.tsuhen[sango[5]] +'）に変化する')
 
 
 
