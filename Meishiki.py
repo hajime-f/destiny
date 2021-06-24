@@ -4,14 +4,15 @@ from datetime import timedelta as td
 
 class Meishiki:
 
-    meishiki = None
     birthday = None
     sex = None
     t_flag = None
-
-    kan_score = 0
-
-    def __init__(self, args):
+    std_num = None
+    
+    meishiki = None
+    analysis = None
+    
+    def __init__(self, args, std_num):
         
         # 起動時の引数から生年月日・性別などのデータを構築する
         
@@ -36,6 +37,15 @@ class Meishiki:
             except IndexError:
                 print('引数の指定を確認してください。')
                 exit()
+
+        # クラス変数を初期化する
+        self.meishiki = {}
+        self.analysis = {}
+
+        # std_num は、天干・蔵干を通算した場合の干の番号
+        # 通常は、日干：２、月支蔵干５を指定する
+        # 日干と月支蔵干が同じ場合は、時支天干：３、年支天干：０などを指定する        
+        self.std_num = std_num
 
                 
     def is_setsuiri(self, month):
@@ -240,7 +250,6 @@ class Meishiki:
             gogyo[kd.gogyo_shi[s]] += 1
         
         # クラス変数 meishiki に情報を追加していく
-        self.meishiki = {}
         self.meishiki.update({"tenkan": tenkan})
         self.meishiki.update({"chishi": chishi})
         self.meishiki.update({"zokan" : zokan})
@@ -264,15 +273,10 @@ class Meishiki:
             return -1
         
 
-    def append_tsuhen(self, std_num):
-        
-        # 命式に通変を追加する
-        # std_num は、天干・蔵干を通算した場合の干の番号
-        # 通常は、日干：２、月支蔵干５を指定する
-        # 日干と月支蔵干が同じ場合は、時支天干：３、年支天干：０などを指定する
+    def append_tsuhen(self):
         
         kan = self.meishiki["tenkan"] + self.meishiki["zokan"]
-        std = kan[std_num]
+        std = kan[self.std_num]
 
         t = []
         for k in kan:
@@ -292,15 +296,10 @@ class Meishiki:
             return -1
             
 
-    def append_twelve_fortune(self, std_num):
-        
-        # 命式に十二運を追加する
-        # std_num は、天干・蔵干を通算した場合の干の番号
-        # 通常は、日干：２、月支蔵干５を指定する
-        # 日干と月支蔵干が同じ場合は、時支天干：３、年支天干：０などを指定する
+    def append_twelve_fortune(self):
         
         kan = self.meishiki["tenkan"] + self.meishiki["zokan"]
-        std = kan[std_num]
+        std = kan[self.std_num]
         
         f = []
         for s in self.meishiki["chishi"]:
@@ -309,7 +308,7 @@ class Meishiki:
         self.meishiki.update({"twelve_fortune": f})
 
 
-    def append_getsurei(self, std_num):
+    def append_getsurei(self):
         
         # ＜機能＞
         # 月令の旺衰強弱を命式に追加する
@@ -319,7 +318,7 @@ class Meishiki:
         #   - kd.getsurei に対応する番号
 
         kan = self.meishiki["tenkan"] + self.meishiki["zokan"]
-        std = kan[std_num]
+        std = kan[self.std_num]
         
         shi_ = kd.shi[self.birthday.month]  # 生まれ月の地支を引く（節入りを考慮している？？？）
         getsurei_ = kd.getsurei_table[std]
@@ -498,7 +497,7 @@ class Meishiki:
         self.meishiki.update({"kubo": k})
 
 
-    def append_sango(self, std_num):
+    def append_sango(self):
 
         # ＜機能＞
         # 三合会局の有無を判定し、あれば命式に追加する
@@ -513,8 +512,8 @@ class Meishiki:
                 sango = s + [self.meishiki["zokan"][1], self.meishiki["tsuhen"][5]]
                 self.meishiki["zokan"][1] = s[2]
                 self.meishiki["getchu"][2] = s[2]
-                self.append_tsuhen(std_num)
-                self.append_twelve_fortune(std_num)
+                self.append_tsuhen(self.std_num)
+                self.append_twelve_fortune(self.std_num)
                 sango += [self.meishiki["tsuhen"][5]]
                 break
         
@@ -536,12 +535,12 @@ class Meishiki:
         self.meishiki.update({"hankai": hankai})
         
 
-    def append_additional_info(self, std_num):
+    def append_additional_info(self):
         
         # 命式にその他の情報を追加する
         
-        self.append_sango(std_num)      # 三合会局を追加
-        self.append_getsurei(std_num)   # 月令を追加
+        self.append_sango()      # 三合会局を追加
+        self.append_getsurei()   # 月令を追加
         self.append_kango()      # 干合を追加
         self.append_shigo()      # 支合を追加
         self.append_hogo()       # 方合を追加
@@ -626,112 +625,114 @@ class Meishiki:
             
 
 
-    def show_additional_info(self):
+    def show_additional_info(self, flag):
 
-        print()
-        print('＜五行＞')
-        for i, g in enumerate(self.meishiki["gogyo"]):
-            print(kd.gogyo[i] + '：' + str(g))
+        if flag:
+            print()
+            print('＜五行＞')
+            for i, g in enumerate(self.meishiki["gogyo"]):
+                print(kd.gogyo[i] + '：' + str(g))
         
         print()
         print('＜月令＞')
         print(kd.getsurei[self.meishiki["getsurei"]])
-        
-        print()
-        print('＜干合＞')
-        if not self.meishiki["kango"]:
-            print('干合なし')
-        else:
-            for k in self.meishiki["kango"]:
-                b1 = kd.kango_chu[k[0][1]]   # 干１の場所
-                k1 = kd.kan[k[0][0]]         # 干１
-                b2 = kd.kango_chu[k[1][1]]   # 干２の場所
-                k2 = kd.kan[k[1][0]]         # 干２
-                g  = kd.gogyo[k[2]]
-                print(b1 + 'の「' + k1 + '」が、' + b2 + 'の「' + k2 + '」と干合して「' + g + '」に五行変化')
+
+        if flag:
+            print()
+            print('＜干合＞')
+            if not self.meishiki["kango"]:
+                print('干合なし')
+            else:
+                for k in self.meishiki["kango"]:
+                    b1 = kd.kango_chu[k[0][1]]   # 干１の場所
+                    k1 = kd.kan[k[0][0]]         # 干１
+                    b2 = kd.kango_chu[k[1][1]]   # 干２の場所
+                    k2 = kd.kan[k[1][0]]         # 干２
+                    g  = kd.gogyo[k[2]]
+                    print(b1 + 'の「' + k1 + '」が、' + b2 + 'の「' + k2 + '」と干合して「' + g + '」に五行変化')
+                    
+            print()
+            print('＜支合＞')
+            if not self.meishiki["shigo"]:
+                print('支合なし')
+            else:
+                for s in self.meishiki["shigo"]:
+                    b1 = kd.shigo_chu[s[0][1]]   # 支１の場所
+                    k1 = kd.shi[s[0][0]]         # 支１
+                    b2 = kd.shigo_chu[s[1][1]]   # 支２の場所
+                    k2 = kd.shi[s[1][0]]         # 支２
+                    print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが支合')
+                    
+            print()
+            print('＜方合＞')
+            if not self.meishiki["hogo"]:
+                print('方合なし')
+            else:
+                print(self.meishiki["hogo"][0] + ', ' + self.meishiki["hogo"][1] + ', ' + self.meishiki["hogo"][2] + 'で方合')
                 
-        print()
-        print('＜支合＞')
-        if not self.meishiki["shigo"]:
-            print('支合なし')
-        else:
-            for s in self.meishiki["shigo"]:
-                b1 = kd.shigo_chu[s[0][1]]   # 支１の場所
-                k1 = kd.shi[s[0][0]]         # 支１
-                b2 = kd.shigo_chu[s[1][1]]   # 支２の場所
-                k2 = kd.shi[s[1][0]]         # 支２
-                print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが支合')
-                
-        print()
-        print('＜方合＞')
-        if not self.meishiki["hogo"]:
-            print('方合なし')
-        else:
-            print(self.meishiki["hogo"][0] + ', ' + self.meishiki["hogo"][1] + ', ' + self.meishiki["hogo"][2] + 'で方合')
+            print()
+            print('＜七冲＞')
+            if not self.meishiki["hitsuchu"]:
+                print('七冲なし')
+            else:
+                for h in self.meishiki["hitsuchu"]:
+                    b1 = kd.shigo_chu[h[0][1]]   # 支１の場所
+                    k1 = kd.shi[h[0][0]]         # 支１
+                    b2 = kd.shigo_chu[h[1][1]]   # 支２の場所
+                    k2 = kd.shi[h[1][0]]         # 支２
+                    print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが冲')
             
-        print()
-        print('＜七冲＞')
-        if not self.meishiki["hitsuchu"]:
-            print('七冲なし')
-        else:
-            for h in self.meishiki["hitsuchu"]:
-                b1 = kd.shigo_chu[h[0][1]]   # 支１の場所
-                k1 = kd.shi[h[0][0]]         # 支１
-                b2 = kd.shigo_chu[h[1][1]]   # 支２の場所
-                k2 = kd.shi[h[1][0]]         # 支２
-                print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが冲')
-                
-        print()
-        print('＜刑＞')
-        if not self.meishiki["kei"]:
-            print('刑なし')
-        else:
-            for k in self.meishiki["kei"]:
-                b1 = kd.shigo_chu[k[0][1]]   # 支１の場所
-                k1 = kd.shi[k[0][0]]         # 支１
-                b2 = kd.shigo_chu[k[1][1]]   # 支２の場所
-                k2 = kd.shi[k[1][0]]         # 支２
-                print(b1 + 'の「' + k1 + '」が、' + b2 + 'の「' + k2 + '」を刑する')
-                
-        print()
-        print('＜害＞')
-        if not self.meishiki["gai"]:
-            print('害なし')
-        else:
-            for g in self.meishiki["gai"]:
-                b1 = kd.shigo_chu[g[0][1]]   # 支１の場所
-                k1 = kd.shi[g[0][0]]         # 支１
-                b2 = kd.shigo_chu[g[1][1]]   # 支２の場所
-                k2 = kd.shi[g[1][0]]         # 支２
-                print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが害')
-                
-        print()
-        print('＜空亡＞')
-        if not self.meishiki["kubo"]:
-            print('空亡なし')
-        else:
-            for k in self.meishiki["kubo"]:
-                b1 = kd.shigo_chu[k[1]]
-                k1 = kd.shi[k[0]]
-                print(b1 + 'の「' + k1 + '」が空亡')
+            print()
+            print('＜刑＞')
+            if not self.meishiki["kei"]:
+                print('刑なし')
+            else:
+                for k in self.meishiki["kei"]:
+                    b1 = kd.shigo_chu[k[0][1]]   # 支１の場所
+                    k1 = kd.shi[k[0][0]]         # 支１
+                    b2 = kd.shigo_chu[k[1][1]]   # 支２の場所
+                    k2 = kd.shi[k[1][0]]         # 支２
+                    print(b1 + 'の「' + k1 + '」が、' + b2 + 'の「' + k2 + '」を刑する')
+            
+            print()
+            print('＜害＞')
+            if not self.meishiki["gai"]:
+                print('害なし')
+            else:
+                for g in self.meishiki["gai"]:
+                    b1 = kd.shigo_chu[g[0][1]]   # 支１の場所
+                    k1 = kd.shi[g[0][0]]         # 支１
+                    b2 = kd.shigo_chu[g[1][1]]   # 支２の場所
+                    k2 = kd.shi[g[1][0]]         # 支２
+                    print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが害')
+                    
+            print()
+            print('＜空亡＞')
+            if not self.meishiki["kubo"]:
+                print('空亡なし')
+            else:
+                for k in self.meishiki["kubo"]:
+                    b1 = kd.shigo_chu[k[1]]
+                    k1 = kd.shi[k[0]]
+                    print(b1 + 'の「' + k1 + '」が空亡')
+                    
+            print()
+            print('＜三合会局＞')
+            if not self.meishiki["sango"]:
+                print('三合会局なし')
+            else:
+                sango = self.meishiki["sango"]
+                print(kd.shi[sango[0][0]] + ', ' + kd.shi[sango[0][1]] + ', ' + kd.shi[sango[0][2]] + 'の三合' + kd.gogyo[sango[1]]+ '局により、月支蔵干が' + kd.kan[sango[3]] + '（' + kd.tsuhen[sango[4]] + '）から' + kd.kan[sango[2]] + '（' + kd.tsuhen[sango[5]] +'）に変化する')
 
-        print()
-        print('＜三合会局＞')
-        if not self.meishiki["sango"]:
-            print('三合会局なし')
-        else:
-            sango = self.meishiki["sango"]
-            print(kd.shi[sango[0][0]] + ', ' + kd.shi[sango[0][1]] + ', ' + kd.shi[sango[0][2]] + 'の三合' + kd.gogyo[sango[1]]+ '局により、月支蔵干が' + kd.kan[sango[3]] + '（' + kd.tsuhen[sango[4]] + '）から' + kd.kan[sango[2]] + '（' + kd.tsuhen[sango[5]] +'）に変化する')
-
-        print()
-        print('＜半会＞')
-        if not self.meishiki["hankai"]:
-            print('半会なし')
-        else:
-            hankai = self.meishiki["hankai"]
-            for h in hankai:
-                print(kd.shi[h[0][0]] + ', ' + kd.shi[h[0][1]] + 'が' + kd.gogyo[h[2]] + '局半会')
-
+            print()
+            print('＜半会＞')
+            if not self.meishiki["hankai"]:
+                print('半会なし')
+            else:
+                hankai = self.meishiki["hankai"]
+                for h in hankai:
+                    print(kd.shi[h[0][0]] + ', ' + kd.shi[h[0][1]] + 'が' + kd.gogyo[h[2]] + '局半会')
+                    
 
 # def is_kakikaku(kango, month_shi):
 

@@ -8,39 +8,41 @@ import sys
 if __name__ == '__main__':
 
     # 命式を作る（日干中心）
-    meishiki1 = Meishiki(sys.argv)
+    meishiki1 = Meishiki(sys.argv, 2)
     meishiki1.build_meishiki()
-    meishiki1.append_tsuhen(2)
-    meishiki1.append_twelve_fortune(2)
-    meishiki1.append_additional_info(2)
-
-    meishiki1.show_basic_info()
+    meishiki1.append_tsuhen()
+    meishiki1.append_twelve_fortune()
+    meishiki1.append_additional_info()
 
     # 命式を整形して出力する
+    meishiki1.show_basic_info()
     meishiki1.show_meishiki()
-    meishiki1.show_additional_info()
+    meishiki1.show_additional_info(True)
 
-    # 鑑定する
-    analysis = Analysis(sys.argv)
-
-    analysis.scoring_kan(meishiki1)
-    print(meishiki1.kan_score)
-    
     # 命式を作る（用神）
-    meishiki2 = Meishiki(sys.argv)
+    meishiki2 = Meishiki(sys.argv, 3)
     meishiki2.build_meishiki()
-    meishiki2.append_tsuhen(5)
-    meishiki2.append_twelve_fortune(5)
-    meishiki2.append_additional_info(5)
-    
+    meishiki2.append_tsuhen()
+    meishiki2.append_twelve_fortune()
+    meishiki2.append_additional_info()
     
     # 命式を整形して出力する
     meishiki2.show_meishiki()
-    meishiki2.show_additional_info()
+    meishiki2.show_additional_info(False)
 
+    # 鑑定する
+    analysis = Analysis(sys.argv)
+    
+    analysis.scoring_kan(meishiki1)
+    analysis.evaluate_kan_strength(meishiki1)
+    analysis.show_kan_strength(meishiki1)
+    
     analysis.scoring_kan(meishiki2)
-    print(meishiki2.kan_score)
+    analysis.evaluate_kan_strength(meishiki2)
+    analysis.show_kan_strength(meishiki2)
 
+    analysis.evaluate_kan_interval(meishiki1, meishiki2)
+    analysis.evaluate_analysis_type(meishiki1, meishiki2)
     
     # 運勢（大運・年運）を作る
     unsei = Unsei(meishiki1)
