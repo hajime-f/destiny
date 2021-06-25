@@ -249,6 +249,13 @@ class Meishiki:
             gogyo[kd.gogyo_kan[t]] += 1
         for s in chishi:
             gogyo[kd.gogyo_shi[s]] += 1
+
+        # 陰陽のそれぞれの数を得る
+        inyo = [0] * 2
+        for t in tenkan:
+            inyo[t % 2] += 1
+        for s in chishi:
+            inyo[s % 2] += 1
         
         # クラス変数 meishiki に情報を追加していく
         self.meishiki.update({"tenkan": tenkan})
@@ -259,6 +266,7 @@ class Meishiki:
         self.meishiki.update({"nitchu": nitchu})
         self.meishiki.update({"jichu" : jichu})
         self.meishiki.update({"gogyo" : gogyo})
+        self.meishiki.update({"inyo"  : inyo})
         self.meishiki.update({"nitchu_tenkan": d_kan})
         self.meishiki.update({"getchu_chishi": m_shi})
         self.meishiki.update({"getchu_zokan" : m_zkan})
@@ -633,7 +641,11 @@ class Meishiki:
             print('＜五行＞')
             for i, g in enumerate(self.meishiki["gogyo"]):
                 print(kd.gogyo[i] + '：' + str(g))
-        
+            print()
+            print('＜陰陽のバランス＞')
+            print('陰：' + str(self.meishiki["inyo"][1]))
+            print('陽：' + str(self.meishiki["inyo"][0]))
+
         print()
         print('＜月令＞')
         print(kd.getsurei[self.meishiki["getsurei"]])
