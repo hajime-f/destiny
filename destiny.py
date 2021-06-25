@@ -20,7 +20,7 @@ if __name__ == '__main__':
     meishiki1.show_additional_info(True)
 
     # 命式を作る（用神）
-    meishiki2 = Meishiki(sys.argv, 3)
+    meishiki2 = Meishiki(sys.argv, 5)
     meishiki2.build_meishiki()
     meishiki2.append_tsuhen()
     meishiki2.append_twelve_fortune()
