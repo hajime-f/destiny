@@ -132,45 +132,53 @@ class Analysis:
 
         # 日干のスコアと月支蔵干のスコアとの差が、所定値以上か否かを評価する
 
-        ms1.analysis["kan_diff"] = -1
-        ms2.analysis["kan_diff"] = -1
+        ms1.analysis["kan_score_diff"] = -1
+        ms2.analysis["kan_score_diff"] = -1
         
         s1 = ms1.analysis["kan_score"]
         s2 = ms2.analysis["kan_score"]
 
         if abs(s1 - s2) < self.diff_threshold:
-            ms1.analysis["kan_diff"] = 1
-            ms2.analysis["kan_diff"] = 1
+            ms1.analysis["kan_score_diff"] = 1
+            ms2.analysis["kan_score_diff"] = 1
         else:
-            ms1.analysis["kan_diff"] = 0
-            ms2.analysis["kan_diff"] = 0
+            ms1.analysis["kan_score_diff"] = 0
+            ms2.analysis["kan_score_diff"] = 0
             
     
     def evaluate_analysis_type(self, ms1, ms2):
-
-        # 日干・月支蔵干がともに小強以上の強さを持ち、
-        # その強さは均衡が取れている場合
-        if  (ms1.analysis["kan_strength"] and ms2.analysis["kan_strength"]) and ms1.analysis["kan_diff"]:
-            
-            # (1) よい通変が用神格となっている場合
-            if kd.tsuhen_gb[ms1.meishiki["tsuhen"][ms2.std_num]]:
-                pass
-            
-            # (2) 悪い通変が用神格となっている場合
-        else:
-            pass
         
-        # (3) 両方とも小強以上の強さを持っているが、一方が強すぎてバランスが崩れている場合
-elif (ms1.analysis["kan_strength"] and ms2.analysis["kan_strength"]) and not ms1.analysis["kan_diff"]:
-    pass
+        # 条件に応じて解析のタイプを決定する
+        
+        # 日干・月支蔵干がともに小強以上の強さを持ち、
+        # その強さは均衡が取れている場合であって、かつ、
+        if  (ms1.analysis["kan_strength"] and ms2.analysis["kan_strength"]) and ms1.analysis["kan_score_diff"]:
+            
+            if kd.tsuhen_gb[ms1.meishiki["tsuhen"][ms2.std_num]]:
+                # (1) よい通変が用神格となっている場合
+                ms1.analysis["type"] = 1
+                ms2.analysis["type"] = 1
+            else:
+                # (2) 悪い通変が用神格となっている場合
+                ms1.analysis["type"] = 2
+                ms2.analysis["type"] = 2
+            
+        elif (ms1.analysis["kan_strength"] and ms2.analysis["kan_strength"]) and not ms1.analysis["kan_score_diff"]:
+            # (3) 両方とも小強以上の強さを持っているが、一方が強すぎてバランスが崩れている場合
+            ms1.analysis["type"] = 3
+            ms2.analysis["type"] = 3
+        
+        elif ms1.analysis["kan_strength"] and not ms2.analysis["kan_strength"]:
+            # (4) 日干が小強以上あるのに対し、用神格が小強に満たない場合
+            ms1.analysis["type"] = 4
+            ms2.analysis["type"] = 4
 
-# (4) 日干が小強以上あるのに対し、用神格が小強に満たない場合
-elif ms1.analysis["kan_strength"] and not ms2.analysis["kan_strength"]:
-    pass
-
-# (5) 用神格が小強以上あるのに対し、日干が小強に満たない場合
-elif not ms1.analysis["kan_strength"] and ms2.analysis["kan_strength"]:
-
-else:
-    pass
+        elif not ms1.analysis["kan_strength"] and ms2.analysis["kan_strength"]:
+            # (5) 用神格が小強以上あるのに対し、日干が小強に満たない場合
+            ms1.analysis["type"] = 5
+            ms2.analysis["type"] = 5
+            
+        else:
+            ms1.analysis["type"] = -1
+            ms2.analysis["type"] = -1
         
