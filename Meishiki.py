@@ -200,9 +200,9 @@ class Meishiki:
         
         try:
             if setsuiri_ + delta >= self.birthday:
-                zokan = kd.zokan[shi][0]
+                zokan = self.zokan[shi][0]
             else:
-                zokan = kd.zokan[shi][1]
+                zokan = self.zokan[shi][1]
             return zokan
         except:
             print('蔵干の計算で例外が送出されました。')
@@ -565,7 +565,7 @@ class Meishiki:
         else:
             sex_str = '女命'
             
-        wareki = self.convert_to_wareki(self.birthday)
+        wareki = kd.convert_to_wareki(self.birthday)
         
         print()
         if self.t_flag:
@@ -1106,6 +1106,21 @@ class Meishiki:
         [44, 15, 43, 14, 44, 15, 45, 16, 47, 17, 48, 18], # 2037年
     ]
 
+    zokan = [
+        [8, 9,],  # 子
+        [9, 5,],  # 丑
+        [4, 0,],  # 寅
+        [0, 1,],  # 卯
+        [1, 4,],  # 辰
+        [4, 2,],  # 巳
+        [2, 3,],  # 午
+        [3, 5,],  # 未
+        [4, 6,],  # 申
+        [6, 7,],  # 酉
+        [7, 4,],  # 戌
+        [4, 8,],  # 亥
+    ]
+    
     zokan_time = [
         [10, 1],
         [9, 3],
@@ -1121,44 +1136,6 @@ class Meishiki:
         [7, 2],
     ]
 
-    WAREKI_START = {
-        '令和': dt(2019, 5, 1),
-        '平成': dt(1989, 1, 8),
-        '昭和': dt(1926, 12, 25)
-    }
-    
-    def convert_to_wareki(self, y_m_d):
-        """西暦の年月日を和暦の年に変換する."""
-        try:
-            if self.WAREKI_START['令和'] <= y_m_d:
-                reiwa_year = self.WAREKI_START['令和'].year
-                era_year = y_m_d.year
-                year = (era_year - reiwa_year) + 1
-                era_str = '令和'
-            elif self.WAREKI_START['平成'] <= y_m_d:
-                reiwa_year = self.WAREKI_START['平成'].year
-                era_year = y_m_d.year
-                year = (era_year - reiwa_year) + 1
-                era_str = '平成'
-            elif self.WAREKI_START['昭和'] <= y_m_d:
-                reiwa_year = self.WAREKI_START['昭和'].year
-                era_year = y_m_d.year
-                year = (era_year - reiwa_year) + 1
-                era_str = '昭和'
-            else:
-                return '昭和以前'
-            
-            if len(str(year)) == 1:
-                year = ' ' + str(year)
-            else:
-                year = str(year)
-                
-            if year == ' 1':
-                year = '元'
-                
-            return era_str + year + '年'
-        except ValueError as e:
-            raise e
     
 # def is_kakikaku(kango, month_shi):
 

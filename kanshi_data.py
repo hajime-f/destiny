@@ -20,7 +20,6 @@ kubo = [
     [0, 1,],
 ]
 
-
 sixty_kanshi = [
     [0, 0,],
     [1, 1,],
@@ -84,8 +83,6 @@ sixty_kanshi = [
     [9, 11,],
 ]
 
-
-
 kan_tsuhen = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,],  # 甲
     [1, 0, 3, 2, 5, 4, 7, 6, 9, 8,],  # 乙
@@ -99,26 +96,7 @@ kan_tsuhen = [
     [9, 8, 1, 0, 3, 2, 5, 4, 7, 6,],  # 癸
 ]
 
-zokan = [
-    [8, 9,],  # 子
-    [9, 5,],  # 丑
-    [4, 0,],  # 寅
-    [0, 1,],  # 卯
-    [1, 4,],  # 辰
-    [4, 2,],  # 巳
-    [2, 3,],  # 午
-    [3, 5,],  # 未
-    [4, 6,],  # 申
-    [6, 7,],  # 酉
-    [7, 4,],  # 戌
-    [4, 8,],  # 亥
-]
-
-
-
-
 tsuhen_gb = [-1, -1, 1, 0, 1, 1, 0, 1, 0, 1,]
-
 
 setsuiri = [
     [1926,1,6,10,55],
@@ -1362,3 +1340,44 @@ kei = [-1, 10, 5, 0, 4, 8, 6, -1, -1, 9, 7, 11]
 
 gai = [7, 6, 5, 4, 3, 2, 1, 0, 11, 10, 9, 8]
 
+
+from datetime import datetime as dt
+
+WAREKI_START = {
+    '令和': dt(2019, 5, 1),
+    '平成': dt(1989, 1, 8),
+    '昭和': dt(1926, 12, 25)
+}
+
+def convert_to_wareki(y_m_d):
+    """西暦の年月日を和暦の年に変換する."""
+    try:
+        if WAREKI_START['令和'] <= y_m_d:
+            reiwa_year = WAREKI_START['令和'].year
+            era_year = y_m_d.year
+            year = (era_year - reiwa_year) + 1
+            era_str = '令和'
+        elif WAREKI_START['平成'] <= y_m_d:
+            reiwa_year = WAREKI_START['平成'].year
+            era_year = y_m_d.year
+            year = (era_year - reiwa_year) + 1
+            era_str = '平成'
+        elif WAREKI_START['昭和'] <= y_m_d:
+            reiwa_year = WAREKI_START['昭和'].year
+            era_year = y_m_d.year
+            year = (era_year - reiwa_year) + 1
+            era_str = '昭和'
+        else:
+            return '昭和以前'
+        
+        if len(str(year)) == 1:
+            year = ' ' + str(year)
+        else:
+            year = str(year)
+            
+        if year == ' 1':
+            year = '元'
+            
+        return era_str + year + '年'
+    except ValueError as e:
+        raise e
