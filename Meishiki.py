@@ -597,10 +597,15 @@ class Meishiki:
         print('+============+============+============+============+')   # 56文字
         if self.t_flag:
             print('| ' + tenkan[3] + '（' + tsuhen[3] + '） ' +
-                  '|     ' + tenkan[2] +
-                  '     | ' + tenkan[1] + '（' + tsuhen[1] + '） ' +
-                  '| ' + tenkan[0] + '（' + tsuhen[0] + '）' +
-                  ' |')
+                  '| ' + tenkan[2] + '（' + tsuhen[2] + '） ' +
+                  '| ' + tenkan[1] + '（' + tsuhen[1] + '） ' +
+                  '| ' + tenkan[0] + '（' + tsuhen[0] + '） ' +
+                  '|')            
+            # print('| ' + tenkan[3] + '（' + tsuhen[3] + '） ' +
+            #       '|     ' + tenkan[2] +
+            #       '     | ' + tenkan[1] + '（' + tsuhen[1] + '） ' +
+            #       '| ' + tenkan[0] + '（' + tsuhen[0] + '）' +
+            #       ' |')
             print('+------------+------------+------------+------------+')
             print('|  ' + chishi[3] + '（' + twelve_fortune[3] + '）  ' +
                   '|  ' + chishi[2] + '（' + twelve_fortune[2] + '）  ' +
