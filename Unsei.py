@@ -139,7 +139,18 @@ class Unsei:
             idx += 1
             if idx >= 60:
                 idx = 0
-                
+
+
+    def append_unsei(self):
+
+        for n in self.nenun:
+            # print(self.meishiki.meishiki["chishi"][2], kd.shi[self.meishiki.meishiki["chishi"][2]])
+            # exit()
+            
+            if (n[2] == kd.hitsuchu[self.meishiki.meishiki["chishi"][2]]) and (n[3] == 6):
+                n += ['天戦地冲運']
+            else:
+                n += ['']
 
     def show_daiun_nenun(self):
         
@@ -149,8 +160,8 @@ class Unsei:
         
         print()
         print()
-        print('        '+ '年' + '        | ' + '年齢' + '  |      ' + '大運' + '       |      ' + '年運')
-        print('------------------+-------+-----------------+------------------')
+        print('        '+ '年' + '        | ' + '年齢' + '  |    ' + '大運' + '     |      ' + '年運' + '   |    運勢    ')
+        print('------------------+-------+-------------+-------------+-----')
 
         for n, nenun in enumerate(self.nenun):
             
@@ -159,7 +170,7 @@ class Unsei:
             n_tsuhen = kd.tsuhen[nenun[3]]
             n_twelve_fortune = kd.twelve_fortune[nenun[4]]
             
-            u = ''.join([n_kan, n_shi]) + ' (' + n_tsuhen + '・' + n_twelve_fortune + ')'
+            u = ''.join([n_kan, n_shi]) + ' (' + n_tsuhen + ')'
             wareki = kd.convert_to_wareki(dt(year=year, month=self.birthday.month, day=self.birthday.day))
             
             if len(str(n)) == 1:
@@ -176,11 +187,11 @@ class Unsei:
             d_twelve_fortune = kd.twelve_fortune[daiun[4]]
             
             if n == daiun[0]:
-                d_un_ = ''.join([d_kan, d_shi]) + ' (' + d_tsuhen + '・' + d_twelve_fortune + ')'
-                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' | '+ d_un_ + ' | ' + u)
-                print('------------------+-------+-----------------+------------------')
+                d_un_ = ''.join([d_kan, d_shi]) + ' (' + d_tsuhen + ')'
+                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' | '+ d_un_ + ' | ' + u + ' | ' + nenun[5])
+                print('------------------+-------+-------------+-------------+-----')
                 m += 1
             else:
-                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' |' + '                ' + ' | ' + u)
+                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' |' + '            ' + ' | ' + u + ' | ' + nenun[5])
                 year += 1
                 

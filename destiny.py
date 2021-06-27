@@ -34,6 +34,7 @@ if __name__ == '__main__':
     unsei = Unsei(meishiki1)
     unsei.append_daiun()
     unsei.append_nenun()
+    unsei.append_unsei()
     
     # 鑑定する
     analysis = Analysis(sys.argv)
@@ -50,5 +51,6 @@ if __name__ == '__main__':
     analysis.evaluate_analysis_type(meishiki1, meishiki2)
     
     # 運勢を整形して出力する
-    # unsei.show_daiun_nenun()
+    unsei.show_daiun_nenun()
     
+    analysis.show_character(meishiki1)
