@@ -144,13 +144,11 @@ class Unsei:
     def append_unsei(self):
 
         for n in self.nenun:
-            # print(self.meishiki.meishiki["chishi"][2], kd.shi[self.meishiki.meishiki["chishi"][2]])
-            # exit()
-            
             if (n[2] == kd.hitsuchu[self.meishiki.meishiki["chishi"][2]]) and (n[3] == 6):
                 n += ['天戦地冲運']
             else:
                 n += ['']
+                
 
     def show_daiun_nenun(self):
         
@@ -193,5 +191,5 @@ class Unsei:
                 m += 1
             else:
                 print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' |' + '            ' + ' | ' + u + ' | ' + nenun[5])
-                year += 1
+            year += 1
                 
