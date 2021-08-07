@@ -26,7 +26,7 @@ class Unsei:
         # ＜入力＞
         #   - brithday（datetime）：生年月日
         # ＜出力＞
-        #   - year_ratio_list（list）：10年に占める割合    
+        #   - year_ratio_list（list）：10年に占める割合
         
         for s in kd.setsuiri:
             p = self.meishiki.is_setsuiri(self.birthday.month)
@@ -76,13 +76,13 @@ class Unsei:
             exit()
     
             
-    def find_kanshi_idx(self, kan, shi):
+    def find_kanshi_idx(self, kan, shi, p):
         
         # 六十干支表から所定の干支のインデクスを返す
         
         for idx, sk in enumerate(kd.sixty_kanshi):
             if (sk[0] == kan) and (sk[1] == shi):
-                return idx
+                return idx + p
             
         print('干支が見つかりませんでした。')
         exit()
@@ -107,7 +107,7 @@ class Unsei:
             ry = year_ratio_list[0]  # 前の節入日が立運の起算日
             p = -1                   # 六十干支表を逆にたどる
             
-        idx = self.find_kanshi_idx(self.meishiki.meishiki["getchu"][0], self.meishiki.meishiki["getchu"][1])
+        idx = self.find_kanshi_idx(self.meishiki.meishiki["getchu"][0], self.meishiki.meishiki["getchu"][1], p)
         
         for n in list(range(10, 140, 10)):
             kanshi_ = kd.sixty_kanshi[idx]
@@ -186,8 +186,8 @@ class Unsei:
             
             if n == daiun[0]:
                 d_un_ = ''.join([d_kan, d_shi]) + ' (' + d_tsuhen + ')'
-                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' | '+ d_un_ + ' | ' + u + ' | ' + nenun[5])
                 print('------------------+-------+-------------+-------------+-----')
+                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' | '+ d_un_ + ' | ' + u + ' | ' + nenun[5])
                 m += 1
             else:
                 print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' |' + '            ' + ' | ' + u + ' | ' + nenun[5])
