@@ -553,11 +553,11 @@ class Meishiki:
         self.append_kango()      # 干合を追加
         self.append_shigo()      # 支合を追加
         self.append_hogo()       # 方合を追加
-        self.append_hitsuchu()   # 七冲を追加
         self.append_kei()        # 刑を追加
         self.append_gai()        # 害を追加
         self.append_kubo()       # 空亡を追加
         self.append_hankai()     # 半会を追加
+        self.append_hitsuchu()   # 七冲を追加
 
     def find_kan(num):
         kan = self.meishiki["tenkan"] + self.meishiki["zokan"]
