@@ -246,9 +246,11 @@ class Meishiki:
         # 五行（木火土金水）のそれぞれの数を得る
         gogyo = [0] * 5
         for t in tenkan:
-            gogyo[kd.gogyo_kan[t]] += 1
+            if t != -1:
+                gogyo[kd.gogyo_kan[t]] += 1
         for s in chishi:
-            gogyo[kd.gogyo_shi[s]] += 1
+            if s != -1:
+                gogyo[kd.gogyo_shi[s]] += 1
 
         # 陰陽のそれぞれの数を得る
         inyo = [0] * 2
