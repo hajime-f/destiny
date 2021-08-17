@@ -1,6 +1,7 @@
 import kanshi_data as kd
 from datetime import datetime as dt
 from datetime import timedelta as td
+import pdb
 
 class Unsei:
 
@@ -28,17 +29,17 @@ class Unsei:
         # ＜出力＞
         #   - year_ratio_list（list）：10年に占める割合
         
-        for s in kd.setsuiri:
+        for i, s in enumerate(kd.setsuiri):
             p = self.meishiki.is_setsuiri(self.birthday.month)
             if (s[0] == self.birthday.year) and (s[1] == self.birthday.month):
-                if s[1] + p <= 0:
-                    y = s[0] -1
-                    m = 12
+                if not p:
+                    k = kd.setsuiri[i+1]
+                    previous_setsuiri = dt(year = s[0], month = s[1], day = s[2], hour = s[3], minute = s[4])
+                    next_setsuiri = dt(year = k[0], month = k[1], day = k[2], hour = k[3], minute = k[4])
                 else:
-                    y = s[0]
-                    m = s[1] + p
-                previous_setsuiri =  dt(year = y, month = m, day = s[2], hour = s[3], minute = s[4])
-                next_setsuiri = dt(year = s[0], month = s[1] + p + 1, day = s[2], hour = s[3], minute = s[4])
+                    k = kd.setsuiri[i-1]
+                    previous_setsuiri = dt(year = k[0], month = k[1], day = k[2], hour = k[3], minute = k[4])
+                    next_setsuiri = dt(year = s[0], month = s[1], day = s[2], hour = s[3], minute = s[4])
                 break
             
         diff_previous = self.birthday - previous_setsuiri   # 生年月日から前の節入日までの日数

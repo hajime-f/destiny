@@ -1,6 +1,7 @@
 import kanshi_data as kd
 from datetime import datetime as dt
 from datetime import timedelta as td
+import pdb
 
 class Meishiki:
 
@@ -330,8 +331,12 @@ class Meishiki:
 
         kan = self.meishiki["tenkan"] + self.meishiki["zokan"]
         std = kan[self.std_num]
-        
-        shi_ = kd.shi[self.birthday.month]  # 生まれ月の地支を引く（節入りを考慮している？？？）
+
+        if self.birthday.month == 12:
+            bm = 0
+        else:
+            bm = self.birthday.month
+        shi_ = kd.shi[bm]    # 生まれ月の地支を引く（節入りを考慮している？？？）→見直しの余地あり
         getsurei_ = kd.getsurei_table[std]
         
         p = False
@@ -523,8 +528,8 @@ class Meishiki:
                 sango = s + [self.meishiki["zokan"][1], self.meishiki["tsuhen"][5]]
                 self.meishiki["zokan"][1] = s[2]
                 self.meishiki["getchu"][2] = s[2]
-                self.append_tsuhen(self.std_num)
-                self.append_twelve_fortune(self.std_num)
+                self.append_tsuhen()
+                self.append_twelve_fortune()
                 sango += [self.meishiki["tsuhen"][5]]
                 break
         
