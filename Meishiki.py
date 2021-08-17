@@ -331,11 +331,11 @@ class Meishiki:
 
         kan = self.meishiki["tenkan"] + self.meishiki["zokan"]
         std = kan[self.std_num]
-
-        if self.birthday.month == 12:
+        
+        bm = self.birthday.month + self.is_setsuiri(self.birthday.month)
+        
+        if bm == 12:
             bm = 0
-        else:
-            bm = self.birthday.month
         shi_ = kd.shi[bm]    # 生まれ月の地支を引く（節入りを考慮している？？？）→見直しの余地あり
         getsurei_ = kd.getsurei_table[std]
         
