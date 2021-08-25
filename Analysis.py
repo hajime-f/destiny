@@ -185,10 +185,21 @@ class Analysis:
     def show_character(self, ms):
 
         tsuhen = ms.meishiki["tsuhen"]
-        character = self.tsuhen_character[tsuhen[6]][tsuhen[5]]
+        character1 = self.tsuhen_character[tsuhen[6]][tsuhen[5]]
 
         print()
-        print(character)
+        print(character1)
+
+        character2 = self.tsuhen_character[tsuhen[5]][tsuhen[1]]
+        
+        print()
+        print(character2)
+        
+        character3 = self.tsuhen_character[tsuhen[5]][tsuhen[6]]
+        
+        print()
+        print(character3)
+
 
         
     # 日柱蔵干の通変と月柱蔵干の通変の組み合わせ（日柱蔵干 x 月柱蔵干）で性格を判断する
