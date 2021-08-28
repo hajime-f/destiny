@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 setsuiri/
+.DS_Store
 
 # C extensions
 *.so
