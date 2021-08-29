@@ -16,18 +16,19 @@ if __name__ == '__main__':
 
     # 命式を整形して出力する
     meishiki1.show_basic_info()
-    meishiki1.show_meishiki()
+    meishiki1.show_meishiki(2)
     meishiki1.show_additional_info(True)
 
     # 命式を作る（用神）
-    meishiki2 = Meishiki(sys.argv, 5)
+    yojin_num = 3
+    meishiki2 = Meishiki(sys.argv, yojin_num)
     meishiki2.build_meishiki()
     meishiki2.append_tsuhen()
     meishiki2.append_twelve_fortune()
     meishiki2.append_additional_info()
     
     # 命式を整形して出力する
-    meishiki2.show_meishiki()
+    meishiki2.show_meishiki(yojin_num)
     meishiki2.show_additional_info(False)
 
     # 運勢（大運・年運）を作る

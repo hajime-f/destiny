@@ -589,7 +589,7 @@ class Meishiki:
             print(str(self.birthday.year) + '年（' + wareki + '）' + str(self.birthday.month) + '月' + str(self.birthday.day) + '日生（時刻不明） ' + sex_str)
 
             
-    def show_meishiki(self):
+    def show_meishiki(self, yojin_num):
         
         # 命式を整形して出力する
         
@@ -603,47 +603,91 @@ class Meishiki:
         print('|   生  時   |   生  日   |   生  月   |   生  年   |')    
         print('+============+============+============+============+')   # 56文字
         if self.t_flag:
-            print('| ' + tenkan[3] + '（' + tsuhen[3] + '） ' +
-                  '| ' + tenkan[2] + '（' + tsuhen[2] + '） ' +
-                  '| ' + tenkan[1] + '（' + tsuhen[1] + '） ' +
-                  '| ' + tenkan[0] + '（' + tsuhen[0] + '） ' +
-                  '|')            
-            # print('| ' + tenkan[3] + '（' + tsuhen[3] + '） ' +
-            #       '|     ' + tenkan[2] +
-            #       '     | ' + tenkan[1] + '（' + tsuhen[1] + '） ' +
-            #       '| ' + tenkan[0] + '（' + tsuhen[0] + '）' +
-            #       ' |')
+            if yojin_num == 3:
+                print('|     ' + tenkan[3] + '     ', end='')
+            else:
+                print('| ' + tenkan[3] + '（' + tsuhen[3] + '） ', end='')
+            if yojin_num == 2:
+                print('|     ' + tenkan[2] + '     ', end='')
+            else:
+                print('| ' + tenkan[2] + '（' + tsuhen[2] + '） ', end='')
+            if yojin_num == 1:
+                print('|     ' + tenkan[1] + '     ', end='')
+            else:
+                print('| ' + tenkan[1] + '（' + tsuhen[1] + '） ', end='')
+            if yojin_num == 0:
+                print('|     ' + tenkan[0] + '     ', end='')
+            else:
+                print('| ' + tenkan[0] + '（' + tsuhen[0] + '） ', end='')
+            print('|')
+
             print('+------------+------------+------------+------------+')
-            print('|  ' + chishi[3] + '（' + twelve_fortune[3] + '）  ' +
-                  '|  ' + chishi[2] + '（' + twelve_fortune[2] + '）  ' +
-                  '|  ' + chishi[1] + '（' + twelve_fortune[1] + '）  ' +
-                  '|  ' + chishi[0] + '（' + twelve_fortune[0] + '）  ' +
-                  '|')
-            print('+------------+------------+------------+------------+')
-            print('| ' + zokan[3] + '（' + tsuhen[7] + '） ' +
-                  '| ' + zokan[2] + '（' + tsuhen[6] + '） ' +
-                  '| ' + zokan[1] + '（' + tsuhen[5] + '） ' +
-                  '| ' + zokan[0] + '（' + tsuhen[4] + '） ' +
-                  '|')
-        else:
-            print('|    ----    ' +
-                  '|     ' + tenkan[2] +
-                  '     | ' + tenkan[1] + '（' + tsuhen[1] + '） ' +
-                  '| ' + tenkan[0] + '（' + tsuhen[0] + '）' +
-                  ' |')
-            print('+------------+------------+------------+------------+')
-            print('|    ----    ' +
-                  '|  ' + chishi[2] + '（' + twelve_fortune[2] + '）  ' +
-                  '|  ' + chishi[1] + '（' + twelve_fortune[1] + '）  ' +
-                  '|  ' + chishi[0] + '（' + twelve_fortune[0] + '）  ' +
-                  '|')
-            print('+------------+------------+------------+------------+')
-            print('|    ----    ' +
-                  '| ' + zokan[2] + '（' + tsuhen[6] + '） ' +
-                  '| ' + zokan[1] + '（' + tsuhen[5] + '） ' +
-                  '| ' + zokan[0] + '（' + tsuhen[4] + '） ' +
-                  '|')
+
+            print('|  ' + chishi[3] + '（' + twelve_fortune[3] + '）  ', end='')
+            print('|  ' + chishi[2] + '（' + twelve_fortune[2] + '）  ', end='')
+            print('|  ' + chishi[1] + '（' + twelve_fortune[1] + '）  ', end='')
+            print('|  ' + chishi[0] + '（' + twelve_fortune[0] + '）  ', end='')
+            print('|')
             
+            print('+------------+------------+------------+------------+')
+
+            if yojin_num == 7:
+                print('|     ' + zokan[3] + '     ', end='')
+            else:
+                print('| ' + zokan[3] + '（' + tsuhen[7] + '） ', end='')
+            if yojin_num == 6:
+                print('|     ' + zokan[2] + '     ', end='')
+            else:
+                print('| ' + zokan[2] + '（' + tsuhen[6] + '） ', end='')
+            if yojin_num == 5:
+                print('|     ' + zokan[1] + '     ', end='')
+            else:            
+                print('| ' + zokan[1] + '（' + tsuhen[5] + '） ', end='')
+            if yojin_num == 4:
+                print('|     ' + zokan[0] + '     ', end='')
+            else:
+                print('| ' + zokan[0] + '（' + tsuhen[4] + '） ', end='')
+            print('|')
+            
+        else:
+            print('|    ----    ', end='')
+            if yojin_num == 2:
+                print('|     ' + tenkan[2] + '     ', end='')
+            else:
+                print('| ' + tenkan[2] + '（' + tsuhen[2] + '） ', end='')
+            if yojin_num == 1:
+                print('|     ' + tenkan[1] + '     ', end='')
+            else:
+                print('| ' + tenkan[1] + '（' + tsuhen[1] + '） ', end='')
+            if yojin_num == 0:
+                print('|     ' + tenkan[0] + '     ', end='')
+            else:
+                print('| ' + tenkan[0] + '（' + tsuhen[0] + '） ', end='')
+            print('|')
+            
+            print('+------------+------------+------------+------------+')
+            print('|    ----    ', end='')
+            print('|  ' + chishi[2] + '（' + twelve_fortune[2] + '）  ', end='')
+            print('|  ' + chishi[1] + '（' + twelve_fortune[1] + '）  ', end='')
+            print('|  ' + chishi[0] + '（' + twelve_fortune[0] + '）  ', end='')
+            print('|')
+            
+            print('+------------+------------+------------+------------+')
+            
+            print('|    ----    ', end='')
+            if yojin_num == 6:
+                print('|     ' + zokan[2] + '     ', end='')
+            else:
+                print('| ' + zokan[2] + '（' + tsuhen[6] + '） ', end='')
+            if yojin_num == 5:
+                print('|     ' + zokan[1] + '     ', end='')
+            else:            
+                print('| ' + zokan[1] + '（' + tsuhen[5] + '） ', end='')
+            if yojin_num == 4:
+                print('|     ' + zokan[0] + '     ', end='')
+            else:
+                print('| ' + zokan[0] + '（' + tsuhen[4] + '） ', end='')
+            print('|')
 
 
     def show_additional_info(self, flag):
