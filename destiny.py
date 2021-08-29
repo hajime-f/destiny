@@ -20,7 +20,7 @@ if __name__ == '__main__':
     meishiki1.show_additional_info(True)
 
     # 命式を作る（用神）
-    yojin_num = 3
+    yojin_num = 5
     meishiki2 = Meishiki(sys.argv, yojin_num)
     meishiki2.build_meishiki()
     meishiki2.append_tsuhen()
@@ -55,3 +55,8 @@ if __name__ == '__main__':
     unsei.show_daiun_nenun()
     
     analysis.show_character(meishiki1)
+
+
+    print(analysis.is_tsuhen_exists(meishiki1, '傷官'))
+    print(analysis.where_tsuhen_exists(meishiki1, '比肩'))
+    

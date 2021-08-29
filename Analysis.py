@@ -2,6 +2,8 @@ import kanshi_data as kd
 from datetime import datetime as dt
 from datetime import timedelta as td
 
+import pdb
+
 class Analysis:
 
     birthday = dt.now()
@@ -182,6 +184,7 @@ class Analysis:
             ms1.analysis["type"] = -1
             ms2.analysis["type"] = -1
 
+            
     def show_character(self, ms):
 
         tsuhen = ms.meishiki["tsuhen"]
@@ -199,7 +202,32 @@ class Analysis:
         
         print()
         print(character3)
+        
+        
+        
+        
+        
+        
+        
+    def is_tsuhen_exists(self, ms, tsuhen_name_exists):
 
+        tsuhen = ms.meishiki["tsuhen"]
+        tsuhen_name = [kd.tsuhen[i] for i in tsuhen]
+        return tsuhen_name.count(tsuhen_name_exists)
+    
+    
+    def where_tsuhen_exists(self, ms, tsuhen_name_exists):
+
+        tsuhen = ms.meishiki["tsuhen"]
+        tsuhen_name = [kd.tsuhen[i] for i in tsuhen]
+
+        if not self.is_tsuhen_exists(ms, tsuhen_name_exists):
+            return 0
+
+        tsuhen_pos = [i for i, _x in enumerate(tsuhen_name) if _x == tsuhen_name_exists]
+        chu_name = [kd.chu[i] for i in tsuhen_pos]
+
+        return chu_name
 
         
     # 日柱蔵干の通変と月柱蔵干の通変の組み合わせ（日柱蔵干 x 月柱蔵干）で性格を判断する
