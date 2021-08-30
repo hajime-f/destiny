@@ -190,24 +190,115 @@ class Analysis:
         tsuhen = ms.meishiki["tsuhen"]
         character1 = self.tsuhen_character[tsuhen[6]][tsuhen[5]]
 
-        print()
         print(character1)
 
         character2 = self.tsuhen_character[tsuhen[5]][tsuhen[1]]
         
-        print()
         print(character2)
         
         character3 = self.tsuhen_character[tsuhen[5]][tsuhen[6]]
         
-        print()
         print(character3)
+
+        ch1 = self.character_condition_01(ms)
+        ch2 = self.character_condition_02(ms)
+        ch3 = self.character_condition_03(ms)
+        ch4 = self.character_condition_04(ms)
+        ch5 = self.character_condition_05(ms)
+        ch6 = self.character_condition_06(ms)
+        ch7 = self.character_condition_07(ms)
+        ch8 = self.character_condition_08(ms)
+
+        if ch1: print(ch1)
+        if ch2: print(ch2)
+        if ch3: print(ch3)
+        if ch4: print(ch4)
+        if ch5: print(ch5)
+        if ch6: print(ch6)
+        if ch7: print(ch7)
+        if ch8: print(ch8)
+        
+
+    def character_condition_01(self, ms):
+
+        flag1 = self.is_tsuhen_exists(ms, '偏印')
+        flag2 = self.is_tsuhen_exists(ms, '偏財')
+        if flag1 and flag2 and not self.sex:
+            return '結婚しても妻以外の女性と関係を持ちそうです。女性関係に気をつけましょう。'
+        else:
+            return ''
+        
+
+    def character_condition_02(self, ms):
+
+        count = self.is_tsuhen_exists(ms, '正財')
+        if count == 2 and self.sex:
+            return '結婚すると夫の浮気に悩まされそうです。特に、夫に経済力がある場合は、本格的に愛人を囲うので、本人の心労は大きくなるでしょう。'
+        else:
+            return ''
+
+    def character_condition_03(self, ms):
+
+        flag1 = '月柱天干' in self.where_tsuhen_exists(ms, '傷官')
+        flag2 = '月柱蔵干' in self.where_tsuhen_exists(ms, '傷官')
+        if flag1 and flag2:
+            return 'ナルシストで、異性より同性に興味を持つ可能性があります。'
+        else:
+            return ''
+
+
+    def character_condition_04(self, ms):
+
+        flag1 = self.is_tsuhen_exists(ms, '劫財')
+        flag2 = self.is_tsuhen_exists(ms, '正官')
+        if flag1 and flag2 and self.sex:
+            return '夫に精神的または肉体的に傷つけられる暗示があります。相手の性格に二面性がないか、酒癖が悪くないかなどを、結婚前にチェックしておきましょう。'
+        else:
+            return ''
         
         
+    def character_condition_05(self, ms):
+
+        flag1 = '月柱天干' in self.where_tsuhen_exists(ms, '偏印')
+        flag2 = '月柱蔵干' in self.where_tsuhen_exists(ms, '偏印')
+        if flag1 and flag2 and self.sex:
+            return '男性で苦労しそうです。DVなどの事件に巻き込まれる暗示もあるので注意が必要です。'
+        else:
+            return ''
+
+
+    def character_condition_06(self, ms):
+
+        count = self.is_tsuhen_exists(ms, '偏印')
+        if count == 3:
+            return '夢の世界で生きているようなところがあり、不思議なキャラクターになりがちです。'
+        else:
+            return ''
         
+
+    def character_condition_07(self, ms):
+
+        flag1 = self.is_tsuhen_exists(ms, '比肩')
+        flag2 = self.is_tsuhen_exists(ms, '偏財')
+
+        flag3 = self.is_tsuhen_exists(ms, '劫財')
+        flag4 = self.is_tsuhen_exists(ms, '偏財')
         
-        
-        
+        if (flag1 and flag2) or (flag3 and flag4):
+            return '好きな異性に貢いでしまうタイプです。好きな人のためならなんとかしてあげたいという気持ちはわかりますが、相手からお金の話が出たら、少し冷静になった方がよいでしょう。'
+        else:
+            return ''
+
+
+    def character_condition_08(self, ms):
+
+        flag1 = self.is_tsuhen_exists(ms, '偏官')
+        flag2 = self.is_tsuhen_exists(ms, '正官')
+        if flag1 == 1 and flag2 == 0:
+            return '聡明なので頭脳で勝負する仕事に向いています。'
+        else:
+            return ''
+
         
     def is_tsuhen_exists(self, ms, tsuhen_name_exists):
 
@@ -221,12 +312,12 @@ class Analysis:
         tsuhen = ms.meishiki["tsuhen"]
         tsuhen_name = [kd.tsuhen[i] for i in tsuhen]
 
-        if not self.is_tsuhen_exists(ms, tsuhen_name_exists):
-            return 0
+        # if not self.is_tsuhen_exists(ms, tsuhen_name_exists):
+        #     return 0
 
         tsuhen_pos = [i for i, _x in enumerate(tsuhen_name) if _x == tsuhen_name_exists]
         chu_name = [kd.chu[i] for i in tsuhen_pos]
-
+        
         return chu_name
 
         

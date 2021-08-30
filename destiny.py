@@ -56,7 +56,4 @@ if __name__ == '__main__':
     
     analysis.show_character(meishiki1)
 
-
-    print(analysis.is_tsuhen_exists(meishiki1, '傷官'))
-    print(analysis.where_tsuhen_exists(meishiki1, '比肩'))
     
