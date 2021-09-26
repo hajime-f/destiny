@@ -20,16 +20,16 @@ if __name__ == '__main__':
     meishiki1.show_additional_info(True)
 
     # 命式を作る（用神）
-    yojin_num = 5
-    meishiki2 = Meishiki(sys.argv, yojin_num)
-    meishiki2.build_meishiki()
-    meishiki2.append_tsuhen()
-    meishiki2.append_twelve_fortune()
-    meishiki2.append_additional_info()
+    # yojin_num = 5
+    # meishiki2 = Meishiki(sys.argv, yojin_num)
+    # meishiki2.build_meishiki()
+    # meishiki2.append_tsuhen()
+    # meishiki2.append_twelve_fortune()
+    # meishiki2.append_additional_info()
     
-    # 命式を整形して出力する
-    meishiki2.show_meishiki(yojin_num)
-    meishiki2.show_additional_info(False)
+    # # 命式を整形して出力する
+    # meishiki2.show_meishiki(yojin_num)
+    # meishiki2.show_additional_info(False)
 
     # 運勢（大運・年運）を作る
     unsei = Unsei(meishiki1)
@@ -44,12 +44,12 @@ if __name__ == '__main__':
     analysis.evaluate_kan_strength(meishiki1)
     analysis.show_kan_strength(meishiki1)
     
-    analysis.scoring_kan(meishiki2)
-    analysis.evaluate_kan_strength(meishiki2)
-    analysis.show_kan_strength(meishiki2)
+    # analysis.scoring_kan(meishiki2)
+    # analysis.evaluate_kan_strength(meishiki2)
+    # analysis.show_kan_strength(meishiki2)
 
-    analysis.evaluate_kan_interval(meishiki1, meishiki2)
-    analysis.evaluate_analysis_type(meishiki1, meishiki2)
+    # analysis.evaluate_kan_interval(meishiki1, meishiki2)
+    # analysis.evaluate_analysis_type(meishiki1, meishiki2)
     
     # 運勢を整形して出力する
     unsei.show_daiun_nenun()

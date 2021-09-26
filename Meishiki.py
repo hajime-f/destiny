@@ -749,7 +749,7 @@ class Meishiki:
                     k1 = kd.shi[h[0][0]]         # 支１
                     b2 = kd.shigo_chu[h[1][1]]   # 支２の場所
                     k2 = kd.shi[h[1][0]]         # 支２
-                    print(b1 + 'の「' + k1 + '」と' + b2 + 'の「' + k2 + '」とが冲')
+                    print(b1 + 'の「' + k1 + '」が' + b2 + 'の「' + k2 + '」を冲する')
             
             print()
             print('＜刑＞')
@@ -801,7 +801,8 @@ class Meishiki:
                 hankai = self.meishiki["hankai"]
                 for h in hankai:
                     print(kd.shi[h[0][0]] + ', ' + kd.shi[h[0][1]] + 'が' + kd.gogyo[h[2]] + '局半会')
-                    
+            print()
+
 
     month_kanshi = [
         [ [3, 1,],  # 甲
