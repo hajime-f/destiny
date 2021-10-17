@@ -717,7 +717,7 @@ class Meishiki:
                     k1 = kd.kan[k[0][0]]         # 干１
                     b2 = kd.kango_chu[k[1][1]]   # 干２の場所
                     k2 = kd.kan[k[1][0]]         # 干２
-                    g  = kd.gogyo[k[2]]
+                    g  = kd.kan[k[2]]
                     print(b1 + 'の「' + k1 + '」が、' + b2 + 'の「' + k2 + '」と干合して「' + g + '」に五行変化')
                     
             print()
