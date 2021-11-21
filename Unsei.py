@@ -111,14 +111,14 @@ class Unsei:
         idx = self.find_kanshi_idx(self.meishiki.meishiki["getchu"][0], self.meishiki.meishiki["getchu"][1], p)
         
         for n in list(range(10, 140, 10)):
+            if idx >= 60:
+                idx = 0
             kanshi_ = kd.sixty_kanshi[idx]
             tsuhen_ = self.meishiki.find_tsuhen(self.meishiki.meishiki["nitchu_tenkan"], kanshi_[0])
             t_fortune_ = self.meishiki.find_twelve_fortune(self.meishiki.meishiki["nitchu_tenkan"], kanshi_[1])
             self.daiun.append([ry, kanshi_[0], kanshi_[1], tsuhen_, t_fortune_])
             ry += 10
             idx += p
-            if idx >= 60:
-                idx = 0
 
 
     def append_nenun(self):
@@ -130,7 +130,7 @@ class Unsei:
         # ＜出力＞
         #   - nenun（list）：年運のリスト
         
-        idx = (self.birthday.year - 3) % 60 - 1 + self.meishiki.is_setsuiri(2)
+        idx = (self.birthday.year - 3) % 60 - 1 # + self.meishiki.is_setsuiri(2)
         
         for n in list(range(0, 120)):
             kanshi_ = kd.sixty_kanshi[idx]
