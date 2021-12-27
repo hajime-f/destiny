@@ -69,7 +69,7 @@ class Analysis:
             self.birthday = dt.strptime(b + ' ' + t, '%Y-%m-%d %H:%M')
             self.t_flag = True
             # サマータイムを考慮する
-            if (dt(year=1948, month=5, day=2) <= self.birthday < dt(year=1951,  month=9, day=8)) and (hour is not None):
+            if (dt(year=1948, month=5, day=2) <= self.birthday < dt(year=1951,  month=9, day=8)) and (self.birthday.hour is not None):
                 self.birthday = dt(year = self.birthday.year, month = self.birthday.month, day = self.birthday.day,
                                    hour = self.birthday.hour - 1, minute = self.birthday.minute)
                 
