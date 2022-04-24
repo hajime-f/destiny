@@ -153,30 +153,33 @@ class Unsei:
             else:
                 ne += ['']
 
-            du = (ne[0] - self.daiun[0][0]) // 10
-            hogo = self.meishiki.meishiki["chishi"] + [self.daiun[du][2]] + [ne[2]]
-            hogo_comb = itertools.permutations(hogo, 3)
-            hogo_list = []
-            for comb in hogo_comb:
-                hogo_list.append(list(comb))
+            # 方合を見る
+            if not self.meishiki.meishiki["hogo"]:
+                du = (ne[0] - self.daiun[0][0]) // 10
+                hogo = self.meishiki.meishiki["chishi"] + [self.daiun[du][2]] + [ne[2]]
+                hogo_comb = itertools.permutations(hogo, 3)
+                hogo_list = []
+                for comb in hogo_comb:
+                    hogo_list.append(list(comb))
             
-            hg = -1
-            for i, h in enumerate(kd.hogo):
-                if h in hogo_list:
-                    hg = i
-                    break
-            if hg == 0:
-                ne += ['水方合']
-            elif hg == 1:
-                ne += ['木方合']
-            elif hg == 2:
-                ne += ['火方合']
-            elif hg == 3:
-                ne += ['金方合']
+                hg = -1
+                for i, h in enumerate(kd.hogo):
+                    if h in hogo_list:
+                        hg = i
+                        break
+                if hg == 0:
+                    ne += ['水方合']
+                elif hg == 1:
+                    ne += ['木方合']
+                elif hg == 2:
+                    ne += ['火方合']
+                elif hg == 3:
+                    ne += ['金方合']
+                else:
+                    ne += ['']
             else:
                 ne += ['']
-            # ne += ["".join([str(_) for _ in hogo])]
-
+            
                 
 
     def show_daiun_nenun(self):

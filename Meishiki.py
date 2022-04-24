@@ -1,6 +1,7 @@
 import kanshi_data as kd
 from datetime import datetime as dt
 from datetime import timedelta as td
+import itertools
 import pdb
 
 class Meishiki:
@@ -418,12 +419,16 @@ class Meishiki:
         # ＜出力＞
         #   - 方合する地支のリスト
         
+        hogo_comb = itertools.permutations(self.meishiki["chishi"], 3)
+        hogo_list = []
+        for comb in hogo_comb:
+            hogo_list.append(list(comb))
         hogo = False
         for i, h in enumerate(kd.hogo):
-            if h in self.meishiki["chishi"]:
+            if h in hogo_list:
                 hogo = True
                 break
-            
+        
         if hogo:
             self.meishiki.update({"hogo": kd.hogo[i]})
         else:
@@ -748,7 +753,7 @@ class Meishiki:
             if not self.meishiki["hogo"]:
                 print('方合なし')
             else:
-                print(self.meishiki["hogo"][0] + ', ' + self.meishiki["hogo"][1] + ', ' + self.meishiki["hogo"][2] + 'で方合')
+                print(kd.shi[self.meishiki["hogo"][0]] + ', ' + kd.shi[self.meishiki["hogo"][1]] + ', ' + kd.shi[self.meishiki["hogo"][2]] + 'で方合')
                 
             print()
             print('＜七冲＞')
