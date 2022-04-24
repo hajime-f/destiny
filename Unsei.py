@@ -50,7 +50,7 @@ class Unsei:
         n_year = round((diff_next.days + (diff_next.seconds / 60 / 60 / 24)) / 3)
         
         year_ratio_list = [p_year, n_year]
-        
+
         return year_ratio_list
 
 

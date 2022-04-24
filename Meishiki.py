@@ -196,14 +196,26 @@ class Meishiki:
                     y = s[0]
                     m = s[1] + p
                 setsuiri_ =  dt(year = y, month = m, day = s[2], hour = s[3], minute = s[4])
-                
-        delta = td(days = self.zokan_time[shi][0], hours = self.zokan_time[shi][1])
-        
+
+        if shi == 6:
+            delta1 = td(days = self.zokan_time[shi][0][0], hours = self.zokan_time[shi][0][1])
+            delta2 = td(days = self.zokan_time[shi][1][0], hours = self.zokan_time[shi][1][1])
+        else:
+            delta = td(days = self.zokan_time[shi][0], hours = self.zokan_time[shi][1])
+
         try:
-            if setsuiri_ + delta >= self.birthday:
-                zokan = self.zokan[shi][0]
+            if shi == 6:
+                if setsuiri_ + delta1 >= self.birthday:
+                    zokan = self.zokan[shi][0]
+                elif setsuiri_ + delta1 < self.birthday <= setsuiri_ + delta2:
+                    zokan = self.zokan[shi][1]
+                else:
+                    zokan = self.zokan[shi][2]
             else:
-                zokan = self.zokan[shi][1]
+                if setsuiri_ + delta >= self.birthday:
+                    zokan = self.zokan[shi][0]
+                else:
+                    zokan = self.zokan[shi][1]                
             return zokan
         except:
             print('蔵干の計算で例外が送出されました。')
@@ -1182,7 +1194,7 @@ class Meishiki:
         [0, 1,],  # 卯
         [1, 4,],  # 辰
         [4, 2,],  # 巳
-        [2, 3,],  # 午
+        [2, 5, 3,],  # 午
         [3, 5,],  # 未
         [4, 6,],  # 申
         [6, 7,],  # 酉
@@ -1197,7 +1209,7 @@ class Meishiki:
         [10, 3],
         [9, 3],
         [7, 2],
-        [10, 0],
+        [[10, 0], [20, 1]],
         [9, 3],
         [7, 2],
         [10, 3],
