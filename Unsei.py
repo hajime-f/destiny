@@ -153,18 +153,18 @@ class Unsei:
             else:
                 ne += ['']
 
+            du = (ne[0] - self.daiun[0][0]) // 10
+            hogo_sango = self.meishiki.meishiki["chishi"] + [self.daiun[du][2]] + [ne[2]]
+            hs_comb = itertools.permutations(hogo_sango, 3)
+            hs_list = []
+            for comb in hs_comb:
+                hs_list.append(list(comb))
+            
             # 方合を見る
             if not self.meishiki.meishiki["hogo"]:
-                du = (ne[0] - self.daiun[0][0]) // 10
-                hogo = self.meishiki.meishiki["chishi"] + [self.daiun[du][2]] + [ne[2]]
-                hogo_comb = itertools.permutations(hogo, 3)
-                hogo_list = []
-                for comb in hogo_comb:
-                    hogo_list.append(list(comb))
-            
                 hg = -1
-                for i, h in enumerate(kd.hogo):
-                    if h in hogo_list:
+                for i, h in enumerate([kd.hogo[0][0]] + [kd.hogo[1][0]] + [kd.hogo[2][0]] + [kd.hogo[3][0]]):
+                    if h in hs_list:
                         hg = i
                         break
                 if hg == 0:
@@ -180,6 +180,26 @@ class Unsei:
             else:
                 ne += ['']
             
+            # 三合を見る
+            if not self.meishiki.meishiki["sango"]:
+                sg = -1
+                for i, h in enumerate([kd.sango[0][0]] + [kd.sango[1][0]] + [kd.sango[2][0]] + [kd.sango[3][0]]):
+                    if h in hs_list:
+                        sg = i
+                        break
+                if sg == 0:
+                    ne += ['三合木局']
+                elif sg == 1:
+                    ne += ['三合火局']
+                elif sg == 2:
+                    ne += ['三合金局']
+                elif sg == 3:
+                    ne += ['三合水局']
+                else:
+                    ne += ['']
+            else:
+                ne += ['']
+
                 
 
     def show_daiun_nenun(self):
@@ -219,9 +239,9 @@ class Unsei:
             if n == daiun[0]:
                 d_un_ = ''.join([d_kan, d_shi]) + ' (' + d_tsuhen + ')'
                 print('------------------+-------+-------------+-------------+-----')
-                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' | '+ d_un_ + ' | ' + u + ' | ' + nenun[5] + nenun[6])
+                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' | '+ d_un_ + ' | ' + u + ' | ' + nenun[5] + nenun[6] + nenun[7])
                 m += 1
             else:
-                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' |' + '            ' + ' | ' + u + ' | ' + nenun[5] + nenun[6])
+                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' |' + '            ' + ' | ' + u + ' | ' + nenun[5] + nenun[6] + nenun[7])
             year += 1
                 

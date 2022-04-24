@@ -424,7 +424,7 @@ class Meishiki:
         for comb in hogo_comb:
             hogo_list.append(list(comb))
         hogo = False
-        for i, h in enumerate(kd.hogo):
+        for i, h in enumerate([kd.hogo[0][0]] + [kd.hogo[1][0]] + [kd.hogo[2][0]] + [kd.hogo[3][0]]):
             if h in hogo_list:
                 hogo = True
                 break
@@ -753,7 +753,7 @@ class Meishiki:
             if not self.meishiki["hogo"]:
                 print('方合なし')
             else:
-                print(kd.shi[self.meishiki["hogo"][0]] + ', ' + kd.shi[self.meishiki["hogo"][1]] + ', ' + kd.shi[self.meishiki["hogo"][2]] + 'で方合')
+                print(kd.shi[self.meishiki["hogo"][0][0]] + ', ' + kd.shi[self.meishiki["hogo"][0][1]] + ', ' + kd.shi[self.meishiki["hogo"][0][2]] + 'で' + kd.gogyo[self.meishiki["hogo"][1]] + '方合')
                 
             print()
             print('＜七冲＞')
