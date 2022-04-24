@@ -1,6 +1,7 @@
 import kanshi_data as kd
 from datetime import datetime as dt
 from datetime import timedelta as td
+import itertools
 import pdb
 
 class Unsei:
@@ -144,11 +145,38 @@ class Unsei:
 
     def append_unsei(self):
 
-        for n in self.nenun:
-            if (n[2] == kd.hitsuchu[self.meishiki.meishiki["chishi"][1]]) and (n[3] == 6):
-                n += ['天戦地冲運']
+        for ne in self.nenun:
+
+            # 天戦地冲運を見る
+            if (ne[2] == kd.hitsuchu_rev[self.meishiki.meishiki["chishi"][2]]) and (ne[3] == 6):
+                ne += ['天戦地冲運']
             else:
-                n += ['']
+                ne += ['']
+
+            du = (ne[0] - self.daiun[0][0]) // 10
+            hogo = self.meishiki.meishiki["chishi"] + [self.daiun[du][2]] + [ne[2]]
+            hogo_comb = itertools.permutations(hogo, 3)
+            hogo_list = []
+            for comb in hogo_comb:
+                hogo_list.append(list(comb))
+            
+            hg = -1
+            for i, h in enumerate(kd.hogo):
+                if h in hogo_list:
+                    hg = i
+                    break
+            if hg == 0:
+                ne += ['水方合']
+            elif hg == 1:
+                ne += ['木方合']
+            elif hg == 2:
+                ne += ['火方合']
+            elif hg == 3:
+                ne += ['金方合']
+            else:
+                ne += ['']
+            # ne += ["".join([str(_) for _ in hogo])]
+
                 
 
     def show_daiun_nenun(self):
@@ -188,9 +216,9 @@ class Unsei:
             if n == daiun[0]:
                 d_un_ = ''.join([d_kan, d_shi]) + ' (' + d_tsuhen + ')'
                 print('------------------+-------+-------------+-------------+-----')
-                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' | '+ d_un_ + ' | ' + u + ' | ' + nenun[5])
+                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' | '+ d_un_ + ' | ' + u + ' | ' + nenun[5] + nenun[6])
                 m += 1
             else:
-                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' |' + '            ' + ' | ' + u + ' | ' + nenun[5])
+                print('' + str(year) + '年（' + wareki + '）| ' + age + '歳' + ' |' + '            ' + ' | ' + u + ' | ' + nenun[5] + nenun[6])
             year += 1
                 

@@ -419,9 +419,8 @@ class Meishiki:
         #   - 方合する地支のリスト
         
         hogo = False
-        chishi = self.meishiki["chishi"]
         for i, h in enumerate(kd.hogo):
-            if h in chishi:
+            if h in self.meishiki["chishi"]:
                 hogo = True
                 break
             
