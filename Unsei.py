@@ -145,7 +145,7 @@ class Unsei:
     def append_unsei(self):
 
         for n in self.nenun:
-            if (n[2] == kd.hitsuchu[self.meishiki.meishiki["chishi"][2]]) and (n[3] == 6):
+            if (n[2] == kd.hitsuchu[self.meishiki.meishiki["chishi"][1]]) and (n[3] == 6):
                 n += ['天戦地冲運']
             else:
                 n += ['']
