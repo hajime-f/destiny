@@ -816,7 +816,7 @@ class Meishiki:
             else:
                 hankai = self.meishiki["hankai"]
                 for h in hankai:
-                    print(kd.shi[h[0][0]] + ', ' + kd.shi[h[0][1]] + 'が' + kd.gogyo[h[2]] + '局半会')
+                    print(kd.shi[h[0][0]] + ', ' + kd.shi[h[0][1]] + 'が' + kd.gogyo[h[2]] + '半会')
             print()
 
 

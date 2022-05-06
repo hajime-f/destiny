@@ -55,5 +55,4 @@ if __name__ == '__main__':
     unsei.show_daiun_nenun()
     
     analysis.show_character(meishiki1)
-
     

@@ -200,6 +200,7 @@ class Unsei:
             else:
                 ne += ['']
 
+            
                 
 
     def show_daiun_nenun(self):
